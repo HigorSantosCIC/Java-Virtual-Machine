@@ -19,7 +19,7 @@ typedef enum
   CONSTANT_MethodHandle = 15,
   CONSTANT_MethodType = 16,
   CONSTANT_InvokeDynamic = 18,
-} CONSTANT_Types;
+} constant_types;
 
 // Constant pool tag types
 typedef struct
