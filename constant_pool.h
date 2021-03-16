@@ -1,5 +1,5 @@
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef CONSTANT_POOL_H
+#define CONSTANT_POOL_H
 
 #include "int_types.h"
 
