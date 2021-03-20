@@ -1,5 +1,5 @@
-#ifndef INT_TYPES_H
-#define INT_TYPES_H
+#ifndef INT_TYPES_HPP
+#define INT_TYPES_HPP
 
 #include <stdint.h>
 

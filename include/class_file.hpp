@@ -1,5 +1,5 @@
-#ifndef CLASS_FILE_H
-#define CLASS_FILE_H
+#ifndef CLASS_FILE_HPP
+#define CLASS_FILE_HPP
 
 #include "int_types.hpp"
 #include "constant_pool.hpp"

@@ -1,5 +1,5 @@
-#ifndef CONSTANT_POOL_H
-#define CONSTANT_POOL_H
+#ifndef CONSTANT_POOL_HPP
+#define CONSTANT_POOL_HPP
 
 #include "int_types.hpp"
 
@@ -21,7 +21,6 @@ typedef enum
   CONSTANT_InvokeDynamic = 18,
 } constant_types;
 
-// Constant pool tag types
 typedef struct
 {
   u2 name_index;

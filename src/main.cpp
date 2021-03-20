@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <string.h>
+#include <string>
 
 #include "class_loader.hpp"
 
