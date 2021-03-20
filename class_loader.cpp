@@ -1,31 +1,17 @@
-#include "int_types.h"
-#include "class_file.h"
-#include "constant_pool.h"
-#include <iostream>
-#include <fstream>
+#include "class_loader.hpp"
 
-/*
-  CONSTANT_Class = 7,-- RAPHAEL
-  CONSTANT_Fieldref = 9, -- RAPHAEL
-  CONSTANT_Methodref = 10, -- RAPHAEL
-  CONSTANT_InterfaceMethodref = 11, 
-  CONSTANT_String = 8, -- RAPHAEL
-  CONSTANT_Integer = 3, - DALLE
-  CONSTANT_Long = 5, - DALLE
-  
-  CONSTANT_NameAndType = 12, - HIGOR
-  CONSTANT_Utf8 = 1, - HIGOR
-  CONSTANT_MethodHandle = 15, - HIGOR
-  CONSTANT_MethodType = 16, - MARANHA
-  CONSTANT_InvokeDynamic = 18, - MARANHA
-*/
+ClassLoader::ClassLoader(const char *file_name)
+{
+  fp = fopen(file_name, "r");
+  class_file = (ClassFile *)malloc(sizeof(ClassFile));
+}
 
-bool verifyMagic(u4 magic)
+bool ClassLoader::verifyMagic(u4 magic)
 {
   return magic == 0xCAFEBABE;
 }
 
-u1 readU1(FILE *fp)
+u1 ClassLoader::readU1()
 {
   u1 content = 0;
 
@@ -34,55 +20,55 @@ u1 readU1(FILE *fp)
   return content;
 }
 
-u2 readU2(FILE *fp)
+u2 ClassLoader::readU2()
 {
   u2 content = 0;
 
   // Shift bytes, as C++ stores bytes in little endian order
   for (int i = 0; i < 2; i++)
   {
-    content += readU1(fp) << (8 - 8 * i);
+    content += readU1() << (8 - 8 * i);
   }
 
   return content;
 }
 
-u4 readU4(FILE *fp)
+u4 ClassLoader::readU4()
 {
   u4 content = 0;
 
   // Shift bytes, as C++ stores bytes in little endian order
   for (int i = 0; i < 4; i++)
   {
-    content += readU1(fp) << (24 - 8 * i);
+    content += readU1() << (24 - 8 * i);
   }
 
   return content;
 }
 
-CONSTANT_Class_info readConstantClassInfo(FILE *fp)
+CONSTANT_Class_info ClassLoader::readConstantClassInfo()
 {
-  u2 name_index = readU2(fp);
+  u2 name_index = readU2();
 
   CONSTANT_Class_info object = {.name_index = name_index};
 
   return object;
 }
 
-CONSTANT_Fieldref_info readConstantFieldrefInfo(FILE *fp)
+CONSTANT_Fieldref_info ClassLoader::readConstantFieldrefInfo()
 {
-  u2 class_index = readU2(fp);
-  u2 name_and_type_index = readU2(fp);
+  u2 class_index = readU2();
+  u2 name_and_type_index = readU2();
 
   CONSTANT_Fieldref_info object = {.class_index = class_index, .name_and_type_index = name_and_type_index};
 
   return object;
 }
 
-CONSTANT_Methodref_info readConstantMethodrefInfo(FILE *fp)
+CONSTANT_Methodref_info ClassLoader::readConstantMethodrefInfo()
 {
-  u2 class_index = readU2(fp);
-  u2 name_and_type_index = readU2(fp);
+  u2 class_index = readU2();
+  u2 name_and_type_index = readU2();
 
   CONSTANT_Methodref_info object;
   object.class_index = class_index,
@@ -91,10 +77,10 @@ CONSTANT_Methodref_info readConstantMethodrefInfo(FILE *fp)
   return object;
 }
 
-CONSTANT_InterfaceMethodref_info readConstantInterfaceMethodrefInfo(FILE *fp)
+CONSTANT_InterfaceMethodref_info ClassLoader::readConstantInterfaceMethodrefInfo()
 {
-  u2 class_index = readU2(fp);
-  u2 name_and_type_index = readU2(fp);
+  u2 class_index = readU2();
+  u2 name_and_type_index = readU2();
 
   CONSTANT_InterfaceMethodref_info object = {
       .class_index = class_index,
@@ -103,9 +89,9 @@ CONSTANT_InterfaceMethodref_info readConstantInterfaceMethodrefInfo(FILE *fp)
   return object;
 }
 
-CONSTANT_String_info readConstantStringInfo(FILE *fp)
+CONSTANT_String_info ClassLoader::readConstantStringInfo()
 {
-  u2 string_index = readU2(fp);
+  u2 string_index = readU2();
 
   CONSTANT_String_info object = {
       .string_index = string_index};
@@ -113,12 +99,10 @@ CONSTANT_String_info readConstantStringInfo(FILE *fp)
   return object;
 }
 
-// Função MethodHandle
-
-CONSTANT_MethodHandle_info readConstantMethodHandleInfo(FILE *fp)
+CONSTANT_MethodHandle_info ClassLoader::readConstantMethodHandleInfo()
 {
-  u1 reference_kind = readU1(fp);
-  u2 reference_index = readU2(fp);
+  u1 reference_kind = readU1();
+  u2 reference_index = readU2();
 
   CONSTANT_MethodHandle_info object = {
       .reference_kind = reference_kind,
@@ -127,12 +111,10 @@ CONSTANT_MethodHandle_info readConstantMethodHandleInfo(FILE *fp)
   return object;
 }
 
-// Função CONSTANT_NameAndType_info;
-
-CONSTANT_NameAndType_info readConstantNameAndTypeInfo(FILE *fp)
+CONSTANT_NameAndType_info ClassLoader::readConstantNameAndTypeInfo()
 {
-  u2 name_index = readU2(fp);
-  u2 descriptor_index = readU2(fp);
+  u2 name_index = readU2();
+  u2 descriptor_index = readU2();
 
   CONSTANT_NameAndType_info object = {
       .name_index = name_index,
@@ -141,17 +123,15 @@ CONSTANT_NameAndType_info readConstantNameAndTypeInfo(FILE *fp)
   return object;
 }
 
-// Função CONSTANT_Utf8_info
-
-CONSTANT_Utf8_info readConstantUtf8Info(FILE *fp)
+CONSTANT_Utf8_info ClassLoader::readConstantUtf8Info()
 {
-  u2 length = readU2(fp);
+  u2 length = readU2();
 
   u1 *bytes = (u1 *)malloc(sizeof(u1) * length);
 
   for (int i = 0; i < length; i++)
   {
-    bytes[i] = readU1(fp);
+    bytes[i] = readU1();
   }
 
   CONSTANT_Utf8_info object = {
@@ -161,17 +141,17 @@ CONSTANT_Utf8_info readConstantUtf8Info(FILE *fp)
   return object;
 }
 
-CONSTANT_Float_info readConstantFloatInfo(FILE *fp)
+CONSTANT_Float_info ClassLoader::readConstantFloatInfo()
 {
-  u4 bytes = readU4(fp);
+  u4 bytes = readU4();
   CONSTANT_Float_info obj{
       .bytes = bytes};
   return obj;
 }
 
-CONSTANT_Integer_info readConstantIntegerInfo(FILE *fp)
+CONSTANT_Integer_info ClassLoader::readConstantIntegerInfo()
 {
-  u4 bytes = readU4(fp);
+  u4 bytes = readU4();
 
   CONSTANT_Integer_info object = {
       .bytes = bytes};
@@ -179,10 +159,10 @@ CONSTANT_Integer_info readConstantIntegerInfo(FILE *fp)
   return object;
 }
 
-CONSTANT_Long_info readConstantLongInfo(FILE *fp)
+CONSTANT_Long_info ClassLoader::readConstantLongInfo()
 {
-  u4 high_bytes = readU4(fp);
-  u4 low_bytes = readU4(fp);
+  u4 high_bytes = readU4();
+  u4 low_bytes = readU4();
 
   CONSTANT_Long_info object = {
       .high_bytes = high_bytes,
@@ -191,10 +171,10 @@ CONSTANT_Long_info readConstantLongInfo(FILE *fp)
   return object;
 }
 
-CONSTANT_Double_info readConstantDoubleInfo(FILE *fp)
+CONSTANT_Double_info ClassLoader::readConstantDoubleInfo()
 {
-  u4 high_bytes = readU4(fp);
-  u4 low_bytes = readU4(fp);
+  u4 high_bytes = readU4();
+  u4 low_bytes = readU4();
 
   CONSTANT_Double_info obj = {
       .high_bytes = high_bytes,
@@ -203,9 +183,9 @@ CONSTANT_Double_info readConstantDoubleInfo(FILE *fp)
   return obj;
 }
 
-CONSTANT_MethodType_info readConstantMethodTypeInfo(FILE *fp)
+CONSTANT_MethodType_info ClassLoader::readConstantMethodTypeInfo()
 {
-  u2 descriptor_index = readU2(fp);
+  u2 descriptor_index = readU2();
 
   CONSTANT_MethodType_info obj = {
       .descriptor_index = descriptor_index};
@@ -213,66 +193,67 @@ CONSTANT_MethodType_info readConstantMethodTypeInfo(FILE *fp)
   return obj;
 }
 
-CONSTANT_InvokeDynamic_info readConstantInvokeDynamicInfo(FILE *fp)
+CONSTANT_InvokeDynamic_info ClassLoader::readConstantInvokeDynamicInfo()
 {
-  u2 bootstrap_method_attr_index = readU2(fp);
-  u2 name_and_type_index = readU2(fp);
+  u2 bootstrap_method_attr_index = readU2();
+  u2 name_and_type_index = readU2();
 
   CONSTANT_InvokeDynamic_info obj = {
       .bootstrap_method_attr_index = bootstrap_method_attr_index,
       .name_and_type_index = name_and_type_index};
+
   return obj;
 }
 
-cp_info *loadCpInfo(FILE *fp)
+cp_info *ClassLoader::loadCpInfo()
 {
   cp_info *constant_pool_entry = (cp_info *)malloc(sizeof(cp_info));
 
-  constant_pool_entry->tag = readU1(fp);
+  constant_pool_entry->tag = readU1();
 
   switch (constant_pool_entry->tag)
   {
   case CONSTANT_Class:
-    constant_pool_entry->info.class_info = readConstantClassInfo(fp);
+    constant_pool_entry->info.class_info = readConstantClassInfo();
     break;
   case CONSTANT_Fieldref:
-    constant_pool_entry->info.fieldref_info = readConstantFieldrefInfo(fp);
+    constant_pool_entry->info.fieldref_info = readConstantFieldrefInfo();
     break;
   case CONSTANT_Methodref:
-    constant_pool_entry->info.methodref_info = readConstantMethodrefInfo(fp);
+    constant_pool_entry->info.methodref_info = readConstantMethodrefInfo();
     break;
   case CONSTANT_InterfaceMethodref:
-    constant_pool_entry->info.interfaceMethodref_info = readConstantInterfaceMethodrefInfo(fp);
+    constant_pool_entry->info.interfaceMethodref_info = readConstantInterfaceMethodrefInfo();
     break;
   case CONSTANT_String:
-    constant_pool_entry->info.string_info = readConstantStringInfo(fp);
+    constant_pool_entry->info.string_info = readConstantStringInfo();
     break;
   case CONSTANT_Integer:
-    constant_pool_entry->info.integer_info = readConstantIntegerInfo(fp);
+    constant_pool_entry->info.integer_info = readConstantIntegerInfo();
     break;
   case CONSTANT_Float:
-    constant_pool_entry->info.float_info = readConstantFloatInfo(fp);
+    constant_pool_entry->info.float_info = readConstantFloatInfo();
     break;
   case CONSTANT_Long:
-    constant_pool_entry->info.long_info = readConstantLongInfo(fp);
+    constant_pool_entry->info.long_info = readConstantLongInfo();
     break;
   case CONSTANT_Double:
-    constant_pool_entry->info.double_info = readConstantDoubleInfo(fp);
+    constant_pool_entry->info.double_info = readConstantDoubleInfo();
     break;
   case CONSTANT_NameAndType:
-    constant_pool_entry->info.nameAndType_info = readConstantNameAndTypeInfo(fp);
+    constant_pool_entry->info.nameAndType_info = readConstantNameAndTypeInfo();
     break;
   case CONSTANT_Utf8:
-    constant_pool_entry->info.utf8_info = readConstantUtf8Info(fp);
+    constant_pool_entry->info.utf8_info = readConstantUtf8Info();
     break;
   case CONSTANT_MethodHandle:
-    constant_pool_entry->info.methodHandle_info = readConstantMethodHandleInfo(fp);
+    constant_pool_entry->info.methodHandle_info = readConstantMethodHandleInfo();
     break;
   case CONSTANT_MethodType:
-    constant_pool_entry->info.methodType_info = readConstantMethodTypeInfo(fp);
+    constant_pool_entry->info.methodType_info = readConstantMethodTypeInfo();
     break;
   case CONSTANT_InvokeDynamic:
-    constant_pool_entry->info.invokeDynamic_info = readConstantInvokeDynamicInfo(fp);
+    constant_pool_entry->info.invokeDynamic_info = readConstantInvokeDynamicInfo();
     break;
 
   default:
@@ -284,11 +265,9 @@ cp_info *loadCpInfo(FILE *fp)
   return constant_pool_entry;
 }
 
-void readClassFile(FILE *fp)
+void ClassLoader::readClassFile()
 {
-  ClassFile *class_file = (ClassFile *)malloc(sizeof(ClassFile));
-
-  u4 magic = readU4(fp);
+  u4 magic = readU4();
 
   std::cout << std::hex << "Magic number: " << magic << std::endl;
 
@@ -298,51 +277,50 @@ void readClassFile(FILE *fp)
 
   class_file->magic = magic;
 
-  u2 minor_version = readU2(fp);
+  u2 minor_version = readU2();
   class_file->minor_version = minor_version;
 
-  u2 major_version = readU2(fp);
+  u2 major_version = readU2();
   class_file->major_version = major_version;
 
   //TODO: Validate version number
 
-  u2 constant_pool_count = readU2(fp);
+  u2 constant_pool_count = readU2();
   class_file->constant_pool_count = constant_pool_count;
 
   cp_info **constant_pool = (cp_info **)malloc(sizeof(cp_info *) * constant_pool_count);
 
   for (int i = 0; i < constant_pool_count - 1; i++)
   {
-    constant_pool[i] = loadCpInfo(fp);
+    constant_pool[i] = loadCpInfo();
     // std::cout << std::hex << "Tag cp_info: " << unsigned(constant_pool[i]->tag) << std::endl;
     if (constant_pool[i]->tag == CONSTANT_Double)
       i++;
   }
 
-  u2 access_flags = readU2(fp);
+  u2 access_flags = readU2();
   class_file->access_flags = access_flags;
 
-  u2 this_class = readU2(fp);
+  u2 this_class = readU2();
   class_file->this_class = this_class;
 
-  u2 super_class = readU2(fp);
+  u2 super_class = readU2();
   class_file->super_class = super_class;
 
-  u2 interfaces_count = readU2(fp);
+  u2 interfaces_count = readU2();
   class_file->interfaces_count = interfaces_count;
 
   u2 *interfaces = (u2 *)malloc(sizeof(u2) * interfaces_count);
 
   for (int i = 0; i < interfaces_count; i++)
   {
-    interfaces[i] = readU2(fp);
+    interfaces[i] = readU2();
     // std::cout << "Interfaces[" << i << "]: " << interfaces << std::endl;
   }
 
-  u2 fields_count = readU2(fp);
+  u2 fields_count = readU2();
   class_file->fields_count = fields_count;
 
-  // Printer
   std::cout << std::hex << "Minor version: " << minor_version << std::endl;
   std::cout << std::hex << "Major version: " << major_version << std::endl;
   std::cout << std::hex << "Constant pool count: " << constant_pool_count << std::endl;

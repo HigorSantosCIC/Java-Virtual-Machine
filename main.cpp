@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string.h>
 
-#include "class_loader.cpp"
+#include "class_loader.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
   // Get .class file name from args
   const char *file_name = argv[1];
 
-  FILE *fp = fopen(file_name, "r");
+  ClassLoader class_loader(file_name);
 
-  readClassFile(fp);
+  class_loader.readClassFile();
 }

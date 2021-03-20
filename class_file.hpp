@@ -1,8 +1,8 @@
 #ifndef CLASS_FILE_H
 #define CLASS_FILE_H
 
-#include "int_types.h"
-#include "constant_pool.h"
+#include "int_types.hpp"
+#include "constant_pool.hpp"
 
 typedef struct
 {

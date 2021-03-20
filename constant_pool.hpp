@@ -1,7 +1,7 @@
 #ifndef CONSTANT_POOL_H
 #define CONSTANT_POOL_H
 
-#include "int_types.h"
+#include "int_types.hpp"
 
 typedef enum
 {
