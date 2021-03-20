@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string.h>
 
-#include "class_reader.cpp"
+#include "class_loader.cpp"
 
 int main(int argc, char *argv[])
 {
@@ -19,4 +19,4 @@ int main(int argc, char *argv[])
   FILE *fp = fopen(file_name, "r");
 
   readClassFile(fp);
-}  
+}
