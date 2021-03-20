@@ -299,29 +299,56 @@ void readClassFile(FILE *fp)
   class_file->magic = magic;
 
   u2 minor_version = readU2(fp);
+  class_file->minor_version = minor_version;
+
   u2 major_version = readU2(fp);
+  class_file->major_version = major_version;
 
   //TODO: Validate version number
 
   u2 constant_pool_count = readU2(fp);
-
-  class_file->minor_version = minor_version;
-  class_file->major_version = major_version;
   class_file->constant_pool_count = constant_pool_count;
-
-  std::cout << std::hex << "Minor version: " << minor_version << std::endl;
-  std::cout << std::hex << "Major version: " << major_version << std::endl;
-  std::cout << "Constant pool count: " << constant_pool_count << std::endl;
 
   cp_info **constant_pool = (cp_info **)malloc(sizeof(cp_info *) * constant_pool_count);
 
   for (int i = 0; i < constant_pool_count - 1; i++)
   {
-    //constant_pool[i] = (cp_info *) malloc(sizeof(cp_info));
-
     constant_pool[i] = loadCpInfo(fp);
-    std::cout << std::hex << "Tag cp_info: " << unsigned(constant_pool[i]->tag) << std::endl;
+    // std::cout << std::hex << "Tag cp_info: " << unsigned(constant_pool[i]->tag) << std::endl;
     if (constant_pool[i]->tag == CONSTANT_Double)
       i++;
   }
+
+  u2 access_flags = readU2(fp);
+  class_file->access_flags = access_flags;
+
+  u2 this_class = readU2(fp);
+  class_file->this_class = this_class;
+
+  u2 super_class = readU2(fp);
+  class_file->super_class = super_class;
+
+  u2 interfaces_count = readU2(fp);
+  class_file->interfaces_count = interfaces_count;
+
+  u2 *interfaces = (u2 *)malloc(sizeof(u2) * interfaces_count);
+
+  for (int i = 0; i < interfaces_count; i++)
+  {
+    interfaces[i] = readU2(fp);
+    // std::cout << "Interfaces[" << i << "]: " << interfaces << std::endl;
+  }
+
+  u2 fields_count = readU2(fp);
+  class_file->fields_count = fields_count;
+
+  // Printer
+  std::cout << std::hex << "Minor version: " << minor_version << std::endl;
+  std::cout << std::hex << "Major version: " << major_version << std::endl;
+  std::cout << std::hex << "Constant pool count: " << constant_pool_count << std::endl;
+  std::cout << "Access flags: " << access_flags << std::endl;
+  std::cout << "This class: " << this_class << std::endl;
+  std::cout << "Super class: " << super_class << std::endl;
+  std::cout << "Interfaces count: " << interfaces_count << std::endl;
+  std::cout << "Fields count: " << fields_count << std::endl;
 }
