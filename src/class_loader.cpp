@@ -1,5 +1,4 @@
 #include "class_loader.hpp"
-
 ClassLoader::ClassLoader(const char *file_name)
 {
   fp = fopen(file_name, "r");
@@ -205,7 +204,7 @@ CONSTANT_InvokeDynamic_info ClassLoader::readConstantInvokeDynamicInfo()
   return obj;
 }
 
-cp_info *ClassLoader::loadCpInfo()
+cp_info *ClassLoader::readCpInfo()
 {
   cp_info *constant_pool_entry = (cp_info *)malloc(sizeof(cp_info));
 
@@ -257,12 +256,301 @@ cp_info *ClassLoader::loadCpInfo()
     break;
 
   default:
-
     std::cout << "INVALID CONSTANT VALUE: " << unsigned(constant_pool_entry->tag) << std::endl;
     return NULL;
   }
 
   return constant_pool_entry;
+}
+
+field_info *ClassLoader::readFieldInfo()
+{
+  field_info *field_entry = (field_info *)malloc(sizeof(field_info));
+
+  field_entry->access_flags = readU2();
+  field_entry->name_index = readU2();
+  field_entry->descriptor_index = readU2();
+  field_entry->attributes_count = readU2();
+
+  attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * field_entry->attributes_count);
+
+  for (int i = 0; i < field_entry->attributes_count; i++)
+  {
+    attributes[i] = readAttributeInfo();
+  }
+
+  field_entry->attributes = attributes;
+
+  return field_entry;
+}
+
+attribute_info *ClassLoader::readAttributeInfo()
+{
+  attribute_info *attribute_entry = (attribute_info *)malloc(sizeof(attribute_info));
+
+  attribute_entry->attribute_name_index = readU2();
+  attribute_entry->attribute_length = readU4();
+
+  std::cout << "Attribute name: " << class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info.bytes << std::endl;
+
+  u1 *attribute_identifier = class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info.bytes;
+
+  // Cast attribute_identifier to char* in order to compare with constant strings
+  char *attribute_name = (char *)attribute_identifier;
+  if (strcmp(attribute_name, CONSTANT_VALUE) == 0)
+  {
+    attribute_entry->attribute.constantvalue_attribute = readConstantValueAttribute();
+  }
+  else if (strcmp(attribute_name, CODE) == 0)
+  {
+    attribute_entry->attribute.code_attribute = readCodeAttribute();
+  }
+  else if (strcmp(attribute_name, EXCEPTIONS) == 0)
+  {
+    attribute_entry->attribute.exceptions_attribute = readExceptionsAttribute();
+  }
+  else if (strcmp(attribute_name, INNER_CLASSES) == 0)
+  {
+    attribute_entry->attribute.innerclasses_attribute = readInnerClassesAttribute();
+  }
+  else if (strcmp(attribute_name, SOURCE_FILE) == 0)
+  {
+    attribute_entry->attribute.sourcefile_attribute = readSourceFileAttribute();
+  }
+  else if (strcmp(attribute_name, DEPRECATED) == 0)
+  {
+    attribute_entry->attribute.deprecated_attribute = readDeprecatedAttribute();
+  }
+  else if (strcmp(attribute_name, SYNTHETIC) == 0)
+  {
+    attribute_entry->attribute.synthetic_attribute = readSyntheticAttribute();
+  }
+  else if (strcmp(attribute_name, LINE_NUMBER_TABLE) == 0)
+  {
+    attribute_entry->attribute.linenumbertable_attribute = readLineNumberTableAttribute();
+  }
+  else if (strcmp(attribute_name, LOCAL_VARIABLE_TABLE) == 0)
+  {
+    attribute_entry->attribute.localvariabletable_attribute = readLocalVariableTableAttribute();
+  }
+
+  return attribute_entry;
+}
+
+ConstantValue_attribute *ClassLoader::readConstantValueAttribute()
+{
+  ConstantValue_attribute *obj = (ConstantValue_attribute *)malloc(sizeof(ConstantValue_attribute));
+
+  obj->constantvalue_index = readU2();
+
+  return obj;
+}
+
+Code_attribute *ClassLoader::readCodeAttribute()
+{
+  Code_attribute *obj = (Code_attribute *)malloc(sizeof(Code_attribute));
+
+  obj->max_stack = readU2();
+  obj->max_locals = readU2();
+  obj->code_length = readU4();
+
+  u1 *code = (u1 *)malloc(sizeof(u1) * obj->code_length);
+
+  for (int i = 0; i < (int)obj->code_length; i++)
+  {
+    code[i] = readU1();
+  }
+
+  obj->code = code;
+  obj->exception_table_length = readU2();
+
+  exception_table_info **exception_table = (exception_table_info **)malloc(sizeof(exception_table_info *) * obj->exception_table_length);
+
+  for (int i = 0; i < obj->exception_table_length; i++)
+  {
+    exception_table[i] = readExceptionTableInfo();
+  }
+
+  obj->exception_table = exception_table;
+  obj->attributes_count = readU2();
+
+  attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * obj->attributes_count);
+
+  for (int i = 0; i < obj->attributes_count; i++)
+  {
+    attributes[i] = readAttributeInfo();
+  }
+
+  obj->attributes = attributes;
+
+  return obj;
+}
+
+exception_table_info *ClassLoader::readExceptionTableInfo()
+{
+  exception_table_info *exception_table = (exception_table_info *)malloc(sizeof(exception_table_info));
+
+  exception_table->start_pc = readU2();
+  exception_table->end_pc = readU2();
+  exception_table->handler_pc = readU2();
+  exception_table->catch_type = readU2();
+
+  return exception_table;
+}
+
+Exceptions_attribute *ClassLoader::readExceptionsAttribute()
+{
+  Exceptions_attribute *obj = (Exceptions_attribute *)malloc(sizeof(Exceptions_attribute));
+
+  obj->number_of_exceptions = readU2();
+
+  u2 *exception_index_table = (u2 *)malloc(sizeof(u2) * obj->number_of_exceptions);
+
+  for (int i = 0; i < obj->number_of_exceptions; i++)
+  {
+    exception_index_table[i] = readU2();
+  }
+
+  obj->exception_index_table = exception_index_table;
+
+  return obj;
+}
+
+InnerClasses_attribute *ClassLoader::readInnerClassesAttribute()
+{
+
+  InnerClasses_attribute *obj = (InnerClasses_attribute *)malloc(sizeof(InnerClasses_attribute));
+
+  obj->number_of_classes = readU2();
+
+  classes_info **classes = (classes_info **)malloc(sizeof(classes_info *) * obj->number_of_classes);
+
+  for (int i = 0; i < obj->number_of_classes; i++)
+  {
+    classes[i] = readClassesInfo();
+  }
+
+  obj->classes = classes;
+
+  return obj;
+}
+
+classes_info *ClassLoader::readClassesInfo()
+{
+  classes_info *classes_table = (classes_info *)malloc(sizeof(classes_info));
+
+  classes_table->inner_class_info_index = readU2();
+  classes_table->outer_class_info_index = readU2();
+  classes_table->inner_name_index = readU2();
+  classes_table->inner_class_access_flags = readU2();
+
+  return classes_table;
+}
+
+SourceFile_attribute *ClassLoader::readSourceFileAttribute()
+{
+  SourceFile_attribute *obj = (SourceFile_attribute *)malloc(sizeof(SourceFile_attribute));
+
+  obj->sourcefile_index = readU2();
+
+  return obj;
+}
+
+Deprecated_attribute *ClassLoader::readDeprecatedAttribute()
+{
+  Deprecated_attribute *obj = (Deprecated_attribute *)malloc(sizeof(Deprecated_attribute));
+
+  return obj;
+}
+
+Synthetic_attribute *ClassLoader::readSyntheticAttribute()
+{
+  Synthetic_attribute *obj = (Synthetic_attribute *)malloc(sizeof(Synthetic_attribute));
+
+  return obj;
+}
+
+LineNumberTable_attribute *ClassLoader::readLineNumberTableAttribute()
+{
+  LineNumberTable_attribute *obj = (LineNumberTable_attribute *)malloc(sizeof(LineNumberTable_attribute));
+
+  obj->line_number_table_length = readU2();
+
+  line_number_table_info **line_number_table = (line_number_table_info **)malloc(sizeof(line_number_table_info *) * obj->line_number_table_length);
+
+  for (int i = 0; i < obj->line_number_table_length; i++)
+  {
+    line_number_table[i] = readLineNumberTable();
+  }
+
+  obj->line_number_table = line_number_table;
+
+  return obj;
+}
+
+line_number_table_info *ClassLoader::readLineNumberTable()
+{
+  line_number_table_info *line_number_table = (line_number_table_info *)malloc(sizeof(line_number_table_info));
+
+  line_number_table->start_pc = readU2();
+  line_number_table->line_number = readU2();
+
+  return line_number_table;
+}
+
+LocalVariableTable_attribute *ClassLoader::readLocalVariableTableAttribute()
+{
+  LocalVariableTable_attribute *obj = (LocalVariableTable_attribute *)malloc(sizeof(LocalVariableTable_attribute));
+
+  obj->local_variable_table_length = readU2();
+
+  local_variable_table_info **local_variable_table = (local_variable_table_info **)malloc(sizeof(local_variable_table_info *) * obj->local_variable_table_length);
+
+  for (int i = 0; i < obj->local_variable_table_length; i++)
+  {
+    local_variable_table[i] = readLocalVariableTable();
+  }
+
+  obj->local_variable_table = local_variable_table;
+
+  return obj;
+}
+
+local_variable_table_info *ClassLoader::readLocalVariableTable()
+{
+  local_variable_table_info *local_variable_table = (local_variable_table_info *)malloc(sizeof(local_variable_table_info));
+
+  local_variable_table->start_pc = readU2();
+  local_variable_table->length = readU2();
+  local_variable_table->name_index = readU2();
+  local_variable_table->descriptor_index = readU2();
+  local_variable_table->index = readU2();
+
+  return local_variable_table;
+}
+
+method_info *ClassLoader::readMethodInfo()
+{
+  method_info *method_entry = (method_info *)malloc(sizeof(method_info));
+
+  method_entry->access_flags = readU2();
+  method_entry->name_index = readU2();
+  method_entry->descriptor_index = readU2();
+  method_entry->attributes_count = readU2();
+
+  std::cout << "Method name: " << class_file->constant_pool[method_entry->name_index - 1]->info.utf8_info.bytes << std::endl;
+  std::cout << "Method descriptor: " << class_file->constant_pool[method_entry->descriptor_index - 1]->info.utf8_info.bytes << std::endl;
+
+  attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * method_entry->attributes_count);
+
+  for (int i = 0; i < method_entry->attributes_count; i++)
+  {
+    attributes[i] = readAttributeInfo();
+  }
+
+  method_entry->attributes = attributes;
+
+  return method_entry;
 }
 
 void ClassLoader::readClassFile()
@@ -292,11 +580,13 @@ void ClassLoader::readClassFile()
 
   for (int i = 0; i < constant_pool_count - 1; i++)
   {
-    constant_pool[i] = loadCpInfo();
+    constant_pool[i] = readCpInfo();
     // std::cout << std::hex << "Tag cp_info: " << unsigned(constant_pool[i]->tag) << std::endl;
     if (constant_pool[i]->tag == CONSTANT_Double)
       i++;
   }
+
+  class_file->constant_pool = constant_pool;
 
   u2 access_flags = readU2();
   class_file->access_flags = access_flags;
@@ -318,8 +608,43 @@ void ClassLoader::readClassFile()
     // std::cout << "Interfaces[" << i << "]: " << interfaces << std::endl;
   }
 
+  class_file->interfaces = interfaces;
+
   u2 fields_count = readU2();
   class_file->fields_count = fields_count;
+
+  field_info **fields = (field_info **)malloc(sizeof(field_info *) * fields_count);
+
+  for (int i = 0; i < fields_count; i++)
+  {
+    fields[i] = readFieldInfo();
+  }
+
+  class_file->fields = fields;
+
+  u2 methods_count = readU2();
+  class_file->methods_count = methods_count;
+
+  method_info **methods = (method_info **)malloc(sizeof(method_info *) * methods_count);
+
+  for (int i = 0; i < methods_count; i++)
+  {
+    methods[i] = readMethodInfo();
+  }
+
+  class_file->methods = methods;
+
+  u2 attributes_count = readU2();
+  class_file->attributes_count = attributes_count;
+
+  attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * attributes_count);
+
+  for (int i = 0; i < methods_count; i++)
+  {
+    attributes[i] = readAttributeInfo();
+  }
+
+  class_file->attributes = attributes;
 
   std::cout << std::hex << "Minor version: " << minor_version << std::endl;
   std::cout << std::hex << "Major version: " << major_version << std::endl;
@@ -329,4 +654,10 @@ void ClassLoader::readClassFile()
   std::cout << "Super class: " << super_class << std::endl;
   std::cout << "Interfaces count: " << interfaces_count << std::endl;
   std::cout << "Fields count: " << fields_count << std::endl;
+  std::cout << "Methods count: " << methods_count << std::endl;
+  std::cout << "Attribute count: " << attributes_count << std::endl;
+  
+  //TODO: Exibidor
+  //exemplo: exibidor.set(leitor.get())
+
 }
