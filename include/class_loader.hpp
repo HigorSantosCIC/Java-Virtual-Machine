@@ -24,21 +24,20 @@ private:
   u1 readU1();
   u2 readU2();
   u4 readU4();
-  CONSTANT_Class_info readConstantClassInfo();
-  CONSTANT_Fieldref_info readConstantFieldrefInfo();
-  CONSTANT_Methodref_info readConstantMethodrefInfo();
-  CONSTANT_InterfaceMethodref_info readConstantInterfaceMethodrefInfo();
-  CONSTANT_String_info readConstantStringInfo();
-  CONSTANT_MethodHandle_info readConstantMethodHandleInfo();
-  CONSTANT_NameAndType_info readConstantNameAndTypeInfo();
-  CONSTANT_Utf8_info readConstantUtf8Info();
-  CONSTANT_Float_info readConstantFloatInfo();
-  CONSTANT_Integer_info readConstantIntegerInfo();
-  CONSTANT_Long_info readConstantLongInfo();
-  CONSTANT_Double_info readConstantDoubleInfo();
-  CONSTANT_MethodType_info readConstantMethodTypeInfo();
-  CONSTANT_InvokeDynamic_info readConstantInvokeDynamicInfo();
-  // TODO: Return pointer instead of struct
+  CONSTANT_Class_info *readConstantClassInfo();
+  CONSTANT_Fieldref_info *readConstantFieldrefInfo();
+  CONSTANT_Methodref_info *readConstantMethodrefInfo();
+  CONSTANT_InterfaceMethodref_info *readConstantInterfaceMethodrefInfo();
+  CONSTANT_String_info *readConstantStringInfo();
+  CONSTANT_MethodHandle_info *readConstantMethodHandleInfo();
+  CONSTANT_NameAndType_info *readConstantNameAndTypeInfo();
+  CONSTANT_Utf8_info *readConstantUtf8Info();
+  CONSTANT_Float_info *readConstantFloatInfo();
+  CONSTANT_Integer_info *readConstantIntegerInfo();
+  CONSTANT_Long_info *readConstantLongInfo();
+  CONSTANT_Double_info *readConstantDoubleInfo();
+  CONSTANT_MethodType_info *readConstantMethodTypeInfo();
+  CONSTANT_InvokeDynamic_info *readConstantInvokeDynamicInfo();
 
   ConstantValue_attribute *readConstantValueAttribute();
   Code_attribute *readCodeAttribute();

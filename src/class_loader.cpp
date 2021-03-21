@@ -45,163 +45,147 @@ u4 ClassLoader::readU4()
   return content;
 }
 
-CONSTANT_Class_info ClassLoader::readConstantClassInfo()
+CONSTANT_Class_info *ClassLoader::readConstantClassInfo()
 {
-  u2 name_index = readU2();
+  CONSTANT_Class_info *object = (CONSTANT_Class_info *)malloc(sizeof(CONSTANT_Class_info));
 
-  CONSTANT_Class_info object = {.name_index = name_index};
+  object->name_index = readU2();
 
   return object;
 }
 
-CONSTANT_Fieldref_info ClassLoader::readConstantFieldrefInfo()
+CONSTANT_Fieldref_info *ClassLoader::readConstantFieldrefInfo()
 {
-  u2 class_index = readU2();
-  u2 name_and_type_index = readU2();
+  CONSTANT_Fieldref_info *object = (CONSTANT_Fieldref_info *)malloc(sizeof(CONSTANT_Fieldref_info));
 
-  CONSTANT_Fieldref_info object = {.class_index = class_index, .name_and_type_index = name_and_type_index};
+  object->class_index = readU2();
+  object->name_and_type_index = readU2();
 
   return object;
 }
 
-CONSTANT_Methodref_info ClassLoader::readConstantMethodrefInfo()
+CONSTANT_Methodref_info *ClassLoader::readConstantMethodrefInfo()
 {
-  u2 class_index = readU2();
-  u2 name_and_type_index = readU2();
+  CONSTANT_Methodref_info *object = (CONSTANT_Methodref_info *)malloc(sizeof(CONSTANT_Methodref_info));
 
-  CONSTANT_Methodref_info object;
-  object.class_index = class_index,
-  object.name_and_type_index = name_and_type_index;
+  object->class_index = readU2();
+  object->name_and_type_index = readU2();
 
   return object;
 }
 
-CONSTANT_InterfaceMethodref_info ClassLoader::readConstantInterfaceMethodrefInfo()
+CONSTANT_InterfaceMethodref_info *ClassLoader::readConstantInterfaceMethodrefInfo()
 {
-  u2 class_index = readU2();
-  u2 name_and_type_index = readU2();
+  CONSTANT_InterfaceMethodref_info *object = (CONSTANT_InterfaceMethodref_info *)malloc(sizeof(CONSTANT_InterfaceMethodref_info));
 
-  CONSTANT_InterfaceMethodref_info object = {
-      .class_index = class_index,
-      .name_and_type_index = name_and_type_index};
+  object->class_index = readU2();
+  object->name_and_type_index = readU2();
 
   return object;
 }
 
-CONSTANT_String_info ClassLoader::readConstantStringInfo()
+CONSTANT_String_info *ClassLoader::readConstantStringInfo()
 {
-  u2 string_index = readU2();
+  CONSTANT_String_info *object = (CONSTANT_String_info *)malloc(sizeof(CONSTANT_String_info));
 
-  CONSTANT_String_info object = {
-      .string_index = string_index};
+  object->string_index = readU2();
 
   return object;
 }
 
-CONSTANT_MethodHandle_info ClassLoader::readConstantMethodHandleInfo()
+CONSTANT_MethodHandle_info *ClassLoader::readConstantMethodHandleInfo()
 {
-  u1 reference_kind = readU1();
-  u2 reference_index = readU2();
+  CONSTANT_MethodHandle_info *object = (CONSTANT_MethodHandle_info *)malloc(sizeof(CONSTANT_MethodHandle_info));
 
-  CONSTANT_MethodHandle_info object = {
-      .reference_kind = reference_kind,
-      .reference_index = reference_index};
+  object->reference_kind = readU1();
+  object->reference_index = readU2();
 
   return object;
 }
 
-CONSTANT_NameAndType_info ClassLoader::readConstantNameAndTypeInfo()
+CONSTANT_NameAndType_info *ClassLoader::readConstantNameAndTypeInfo()
 {
-  u2 name_index = readU2();
-  u2 descriptor_index = readU2();
+  CONSTANT_NameAndType_info *object = (CONSTANT_NameAndType_info *)malloc(sizeof(CONSTANT_NameAndType_info));
 
-  CONSTANT_NameAndType_info object = {
-      .name_index = name_index,
-      .descriptor_index = descriptor_index};
+  object->name_index = readU2();
+  object->descriptor_index = readU2();
 
   return object;
 }
 
-CONSTANT_Utf8_info ClassLoader::readConstantUtf8Info()
+CONSTANT_Utf8_info *ClassLoader::readConstantUtf8Info()
 {
-  u2 length = readU2();
+  CONSTANT_Utf8_info *object = (CONSTANT_Utf8_info *)malloc(sizeof(CONSTANT_Utf8_info));
 
-  u1 *bytes = (u1 *)malloc(sizeof(u1) * length);
+  object->length = readU2();
 
-  for (int i = 0; i < length; i++)
+  u1 *bytes = (u1 *)malloc(sizeof(u1) * object->length);
+
+  for (int i = 0; i < object->length; i++)
   {
     bytes[i] = readU1();
   }
 
-  CONSTANT_Utf8_info object = {
-      .length = length,
-      .bytes = bytes};
+  object->bytes = bytes;
 
   return object;
 }
 
-CONSTANT_Float_info ClassLoader::readConstantFloatInfo()
+CONSTANT_Float_info *ClassLoader::readConstantFloatInfo()
 {
-  u4 bytes = readU4();
-  CONSTANT_Float_info obj{
-      .bytes = bytes};
-  return obj;
-}
+  CONSTANT_Float_info *object = (CONSTANT_Float_info *)malloc(sizeof(CONSTANT_Float_info));
 
-CONSTANT_Integer_info ClassLoader::readConstantIntegerInfo()
-{
-  u4 bytes = readU4();
-
-  CONSTANT_Integer_info object = {
-      .bytes = bytes};
+  object->bytes = readU4();
 
   return object;
 }
 
-CONSTANT_Long_info ClassLoader::readConstantLongInfo()
+CONSTANT_Integer_info *ClassLoader::readConstantIntegerInfo()
 {
-  u4 high_bytes = readU4();
-  u4 low_bytes = readU4();
+  CONSTANT_Integer_info *object = (CONSTANT_Integer_info *)malloc(sizeof(CONSTANT_Integer_info));
 
-  CONSTANT_Long_info object = {
-      .high_bytes = high_bytes,
-      .low_bytes = low_bytes};
+  object->bytes = readU4();
 
   return object;
 }
 
-CONSTANT_Double_info ClassLoader::readConstantDoubleInfo()
+CONSTANT_Long_info *ClassLoader::readConstantLongInfo()
 {
-  u4 high_bytes = readU4();
-  u4 low_bytes = readU4();
+  CONSTANT_Long_info *object = (CONSTANT_Long_info *)malloc(sizeof(CONSTANT_Long_info));
 
-  CONSTANT_Double_info obj = {
-      .high_bytes = high_bytes,
-      .low_bytes = low_bytes};
+  object->high_bytes = readU4();
+  object->low_bytes = readU4();
 
-  return obj;
+  return object;
 }
 
-CONSTANT_MethodType_info ClassLoader::readConstantMethodTypeInfo()
+CONSTANT_Double_info *ClassLoader::readConstantDoubleInfo()
 {
-  u2 descriptor_index = readU2();
+  CONSTANT_Double_info *object = (CONSTANT_Double_info *)malloc(sizeof(CONSTANT_Double_info));
 
-  CONSTANT_MethodType_info obj = {
-      .descriptor_index = descriptor_index};
+  object->high_bytes = readU4();
+  object->low_bytes = readU4();
 
-  return obj;
+  return object;
 }
 
-CONSTANT_InvokeDynamic_info ClassLoader::readConstantInvokeDynamicInfo()
+CONSTANT_MethodType_info *ClassLoader::readConstantMethodTypeInfo()
 {
-  u2 bootstrap_method_attr_index = readU2();
-  u2 name_and_type_index = readU2();
+  CONSTANT_MethodType_info *object = (CONSTANT_MethodType_info *)malloc(sizeof(CONSTANT_MethodType_info));
 
-  CONSTANT_InvokeDynamic_info obj = {
-      .bootstrap_method_attr_index = bootstrap_method_attr_index,
-      .name_and_type_index = name_and_type_index};
+  object->descriptor_index = readU2();
 
-  return obj;
+  return object;
+}
+
+CONSTANT_InvokeDynamic_info *ClassLoader::readConstantInvokeDynamicInfo()
+{
+  CONSTANT_InvokeDynamic_info *object = (CONSTANT_InvokeDynamic_info *)malloc(sizeof(CONSTANT_InvokeDynamic_info));
+
+  object->bootstrap_method_attr_index = readU2();
+  object->name_and_type_index = readU2();
+
+  return object;
 }
 
 cp_info *ClassLoader::readCpInfo()
@@ -291,9 +275,9 @@ attribute_info *ClassLoader::readAttributeInfo()
   attribute_entry->attribute_name_index = readU2();
   attribute_entry->attribute_length = readU4();
 
-  std::cout << "Attribute name: " << class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info.bytes << std::endl;
+  std::cout << "Attribute name: " << class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info->bytes << std::endl;
 
-  u1 *attribute_identifier = class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info.bytes;
+  u1 *attribute_identifier = class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info->bytes;
 
   // Cast attribute_identifier to char* in order to compare with constant strings
   char *attribute_name = (char *)attribute_identifier;
@@ -538,8 +522,8 @@ method_info *ClassLoader::readMethodInfo()
   method_entry->descriptor_index = readU2();
   method_entry->attributes_count = readU2();
 
-  std::cout << "Method name: " << class_file->constant_pool[method_entry->name_index - 1]->info.utf8_info.bytes << std::endl;
-  std::cout << "Method descriptor: " << class_file->constant_pool[method_entry->descriptor_index - 1]->info.utf8_info.bytes << std::endl;
+  std::cout << "Method name: " << class_file->constant_pool[method_entry->name_index - 1]->info.utf8_info->bytes << std::endl;
+  std::cout << "Method descriptor: " << class_file->constant_pool[method_entry->descriptor_index - 1]->info.utf8_info->bytes << std::endl;
 
   attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * method_entry->attributes_count);
 
@@ -646,6 +630,7 @@ void ClassLoader::readClassFile()
 
   class_file->attributes = attributes;
 
+  // TODO: Move logging to ClassViewer
   std::cout << std::hex << "Minor version: " << minor_version << std::endl;
   std::cout << std::hex << "Major version: " << major_version << std::endl;
   std::cout << std::hex << "Constant pool count: " << constant_pool_count << std::endl;
@@ -656,8 +641,4 @@ void ClassLoader::readClassFile()
   std::cout << "Fields count: " << fields_count << std::endl;
   std::cout << "Methods count: " << methods_count << std::endl;
   std::cout << "Attribute count: " << attributes_count << std::endl;
-  
-  //TODO: Exibidor
-  //exemplo: exibidor.set(leitor.get())
-
 }
