@@ -1,0 +1,4 @@
+/bin/*
+/obj/*
+jvm.code-workspace
+*.class
