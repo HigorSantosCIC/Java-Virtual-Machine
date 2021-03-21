@@ -3,6 +3,9 @@
 
 #include "int_types.hpp"
 #include "constant_pool.hpp"
+#include "fields.hpp"
+#include "methods.hpp"
+#include "attributes.hpp"
 
 typedef struct
 {
@@ -10,18 +13,18 @@ typedef struct
   u2 minor_version;
   u2 major_version;
   u2 constant_pool_count;
-  cp_info *constant_pool;
+  cp_info **constant_pool;
   u2 access_flags;
   u2 this_class;
   u2 super_class;
   u2 interfaces_count;
   u2 *interfaces;
   u2 fields_count;
-  //TODO: field_info *fields;
+  field_info **fields;
   u2 methods_count;
-  //TODO: method_info *methods;
+  method_info **methods;
   u2 attributes_count;
-  //TODO: attribute_info *attributes;
+  attribute_info **attributes;
 } ClassFile;
 
 #endif
