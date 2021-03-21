@@ -4,6 +4,7 @@
 #include <string>
 
 #include "class_loader.hpp"
+#include "memory_cleaner.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -19,4 +20,12 @@ int main(int argc, char *argv[])
   ClassLoader class_loader(file_name);
 
   class_loader.readClassFile();
+
+  ClassFile *class_file = class_loader.getClassFile();
+
+  MemoryCleaner memory_cleaner(class_file);
+
+  memory_cleaner.freeClassFileMemory();
+
+  free(class_file);
 }

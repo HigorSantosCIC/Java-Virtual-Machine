@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string.h>
+#include <string>
 #include "int_types.hpp"
 #include "class_file.hpp"
 #include "constant_pool.hpp"
@@ -16,6 +17,8 @@ public:
   ClassLoader(const char *file_name);
 
   void readClassFile();
+
+  ClassFile *getClassFile();
 
 private:
   FILE *fp;

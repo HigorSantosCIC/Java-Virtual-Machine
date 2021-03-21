@@ -275,45 +275,43 @@ attribute_info *ClassLoader::readAttributeInfo()
   attribute_entry->attribute_name_index = readU2();
   attribute_entry->attribute_length = readU4();
 
-  std::cout << "Attribute name: " << class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info->bytes << std::endl;
+  std::string attribute_name = AttributeUtils::getAttributeType(class_file->constant_pool, attribute_entry->attribute_name_index);
 
-  u1 *attribute_identifier = class_file->constant_pool[attribute_entry->attribute_name_index - 1]->info.utf8_info->bytes;
+  std::cout << "Attribute name: " << attribute_name << std::endl;
 
-  // Cast attribute_identifier to char* in order to compare with constant strings
-  char *attribute_name = (char *)attribute_identifier;
-  if (strcmp(attribute_name, CONSTANT_VALUE) == 0)
+  if (attribute_name == CONSTANT_VALUE)
   {
     attribute_entry->attribute.constantvalue_attribute = readConstantValueAttribute();
   }
-  else if (strcmp(attribute_name, CODE) == 0)
+  else if (attribute_name == CODE)
   {
     attribute_entry->attribute.code_attribute = readCodeAttribute();
   }
-  else if (strcmp(attribute_name, EXCEPTIONS) == 0)
+  else if (attribute_name == EXCEPTIONS)
   {
     attribute_entry->attribute.exceptions_attribute = readExceptionsAttribute();
   }
-  else if (strcmp(attribute_name, INNER_CLASSES) == 0)
+  else if (attribute_name == INNER_CLASSES)
   {
     attribute_entry->attribute.innerclasses_attribute = readInnerClassesAttribute();
   }
-  else if (strcmp(attribute_name, SOURCE_FILE) == 0)
+  else if (attribute_name == SOURCE_FILE)
   {
     attribute_entry->attribute.sourcefile_attribute = readSourceFileAttribute();
   }
-  else if (strcmp(attribute_name, DEPRECATED) == 0)
+  else if (attribute_name == DEPRECATED)
   {
     attribute_entry->attribute.deprecated_attribute = readDeprecatedAttribute();
   }
-  else if (strcmp(attribute_name, SYNTHETIC) == 0)
+  else if (attribute_name == SYNTHETIC)
   {
     attribute_entry->attribute.synthetic_attribute = readSyntheticAttribute();
   }
-  else if (strcmp(attribute_name, LINE_NUMBER_TABLE) == 0)
+  else if (attribute_name == LINE_NUMBER_TABLE)
   {
     attribute_entry->attribute.linenumbertable_attribute = readLineNumberTableAttribute();
   }
-  else if (strcmp(attribute_name, LOCAL_VARIABLE_TABLE) == 0)
+  else if (attribute_name == LOCAL_VARIABLE_TABLE)
   {
     attribute_entry->attribute.localvariabletable_attribute = readLocalVariableTableAttribute();
   }
@@ -638,7 +636,12 @@ void ClassLoader::readClassFile()
   std::cout << "This class: " << this_class << std::endl;
   std::cout << "Super class: " << super_class << std::endl;
   std::cout << "Interfaces count: " << interfaces_count << std::endl;
-  std::cout << "Fields count: " << fields_count << std::endl;
+  std::cout << "Fields count: " << class_file->fields_count << std::endl;
   std::cout << "Methods count: " << methods_count << std::endl;
   std::cout << "Attribute count: " << attributes_count << std::endl;
+}
+
+ClassFile *ClassLoader::getClassFile()
+{
+  return class_file;
 }

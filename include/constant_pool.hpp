@@ -88,6 +88,7 @@ typedef struct
   u1 reference_kind;
   u2 reference_index;
 } CONSTANT_MethodHandle_info;
+
 typedef struct
 {
   u2 descriptor_index;

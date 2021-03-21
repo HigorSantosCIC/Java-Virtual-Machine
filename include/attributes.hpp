@@ -2,6 +2,9 @@
 #define ATTRIBUTES_HPP
 
 #include "int_types.hpp"
+#include "constant_pool.hpp"
+#include <iostream>
+#include <string>
 
 // Attribute names cannot be mapped to strings through enums
 #define CONSTANT_VALUE "ConstantValue"
@@ -13,6 +16,12 @@
 #define SYNTHETIC "Synthetic"
 #define LINE_NUMBER_TABLE "LineNumberTable"
 #define LOCAL_VARIABLE_TABLE "LocalVariableTable"
+
+namespace AttributeUtils
+{
+  // Attribute type is determined by an utf8_info in constant pool, indexed by attribute_name_index
+  extern std::string getAttributeType(cp_info **constant_pool, u2 index);
+}
 
 struct attribute_info;
 
