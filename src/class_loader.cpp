@@ -627,18 +627,6 @@ void ClassLoader::readClassFile()
   }
 
   class_file->attributes = attributes;
-
-  // TODO: Move logging to ClassViewer
-  std::cout << std::hex << "Minor version: " << minor_version << std::endl;
-  std::cout << std::hex << "Major version: " << major_version << std::endl;
-  std::cout << std::hex << "Constant pool count: " << constant_pool_count << std::endl;
-  std::cout << "Access flags: " << access_flags << std::endl;
-  std::cout << "This class: " << this_class << std::endl;
-  std::cout << "Super class: " << super_class << std::endl;
-  std::cout << "Interfaces count: " << interfaces_count << std::endl;
-  std::cout << "Fields count: " << class_file->fields_count << std::endl;
-  std::cout << "Methods count: " << methods_count << std::endl;
-  std::cout << "Attribute count: " << attributes_count << std::endl;
 }
 
 ClassFile *ClassLoader::getClassFile()
