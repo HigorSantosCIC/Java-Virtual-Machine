@@ -15,6 +15,7 @@ public:
 
 private:
   ClassFile *class_file;
+  int tab_count = 0;
 
   void printInterfaces();
   void printConstantPool(cp_info **constant_pool, u2 constant_pool_count);
@@ -46,6 +47,8 @@ private:
   void printLineNumberTable(line_number_table_info *line_number_table_entry);
   void printLocalVariableTableAttribute(LocalVariableTable_attribute *localvariabletable_attribute);
   void printLocalVariableTable(local_variable_table_info *local_variable_table_entry);
+  void printMethods(method_info **methods, u2 methods_count);
+  void printMethodInfo(method_info *method);
 };
 
 #endif

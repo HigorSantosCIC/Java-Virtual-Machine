@@ -18,6 +18,9 @@ void MemoryCleaner::freeConstantPool(cp_info **constant_pool, u2 constant_pool_c
   for (int i = 0; i < constant_pool_count - 1; i++)
   {
     freeConstantPoolInfo(constant_pool[i]);
+
+    if (constant_pool[i]->tag == CONSTANT_Double)
+      i++;
   }
 
   free(constant_pool);

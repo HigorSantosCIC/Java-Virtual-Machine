@@ -277,8 +277,6 @@ attribute_info *ClassLoader::readAttributeInfo()
 
   std::string attribute_name = AttributeUtils::getAttributeType(class_file->constant_pool, attribute_entry->attribute_name_index);
 
-  std::cout << "Attribute name: " << attribute_name << std::endl;
-
   if (attribute_name == CONSTANT_VALUE)
   {
     attribute_entry->attribute.constantvalue_attribute = readConstantValueAttribute();
@@ -520,9 +518,6 @@ method_info *ClassLoader::readMethodInfo()
   method_entry->descriptor_index = readU2();
   method_entry->attributes_count = readU2();
 
-  std::cout << "Method name: " << class_file->constant_pool[method_entry->name_index - 1]->info.utf8_info->bytes << std::endl;
-  std::cout << "Method descriptor: " << class_file->constant_pool[method_entry->descriptor_index - 1]->info.utf8_info->bytes << std::endl;
-
   attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * method_entry->attributes_count);
 
   for (int i = 0; i < method_entry->attributes_count; i++)
@@ -538,8 +533,6 @@ method_info *ClassLoader::readMethodInfo()
 void ClassLoader::readClassFile()
 {
   u4 magic = readU4();
-
-  std::cout << std::hex << "Magic number: " << magic << std::endl;
 
   if (!verifyMagic(magic))
     //TODO: return error
@@ -563,7 +556,7 @@ void ClassLoader::readClassFile()
   for (int i = 0; i < constant_pool_count - 1; i++)
   {
     constant_pool[i] = readCpInfo();
-    // std::cout << std::hex << "Tag cp_info: " << unsigned(constant_pool[i]->tag) << std::endl;
+
     if (constant_pool[i]->tag == CONSTANT_Double)
       i++;
   }
@@ -587,7 +580,6 @@ void ClassLoader::readClassFile()
   for (int i = 0; i < interfaces_count; i++)
   {
     interfaces[i] = readU2();
-    // std::cout << "Interfaces[" << i << "]: " << interfaces << std::endl;
   }
 
   class_file->interfaces = interfaces;
@@ -621,7 +613,7 @@ void ClassLoader::readClassFile()
 
   attribute_info **attributes = (attribute_info **)malloc(sizeof(attribute_info *) * attributes_count);
 
-  for (int i = 0; i < methods_count; i++)
+  for (int i = 0; i < attributes_count; i++)
   {
     attributes[i] = readAttributeInfo();
   }

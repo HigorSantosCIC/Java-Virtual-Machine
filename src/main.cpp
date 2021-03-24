@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
   ClassViewer class_viewer(class_file);
   class_viewer.printClassFile();
 
-  MemoryCleaner memory_cleaner(class_file);
-  memory_cleaner.freeClassFileMemory();
+  // MemoryCleaner memory_cleaner(class_file);
+  // memory_cleaner.freeClassFileMemory();
 
   free(class_file);
 }
