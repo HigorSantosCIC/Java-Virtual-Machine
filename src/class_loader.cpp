@@ -535,8 +535,9 @@ void ClassLoader::readClassFile()
   u4 magic = readU4();
 
   if (!verifyMagic(magic))
-    //TODO: return error
-    return;
+    std::cout << "Error CAFEBABE" << std::endl;
+  exit(EXIT_FAILURE);
+  return;
 
   class_file->magic = magic;
 
@@ -547,7 +548,27 @@ void ClassLoader::readClassFile()
   class_file->major_version = major_version;
 
   //TODO: Validate version number
+  //-----------------------------------// VALIDATION
+  auto major = std::to_string(class_file->major_version);
+  auto minor = std::to_string(class_file->minor_version);
+  auto version_j8 = std::to_string(52);
 
+  auto maxver = version_j8 + ".0" + minor;
+  auto minver = minor + ".0";
+  auto curver = major + ".0" + minor;
+
+  //CONVERT TO DOUBLE
+  auto version = std::stod(curver);
+  if (version < std::stod(minver) || version > std::stod(maxver))
+  {
+    std::cout << "ClassFile JVM 8 Support" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  else
+  {
+    std::cout << "ClassFile doesnt JVM 8 Support " << std::endl;
+  }
+  //-----------------------------------// VALIDATION
   u2 constant_pool_count = readU2();
   class_file->constant_pool_count = constant_pool_count;
 
