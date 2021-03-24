@@ -49,6 +49,8 @@ private:
   void printLocalVariableTable(local_variable_table_info *local_variable_table_entry);
   void printMethods(method_info **methods, u2 methods_count);
   void printMethodInfo(method_info *method);
+  void printFields(field_info **fields, u2 fields_count);
+  void printFieldInfo(field_info *field);
 };
 
 #endif

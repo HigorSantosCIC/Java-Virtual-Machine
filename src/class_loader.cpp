@@ -557,7 +557,7 @@ void ClassLoader::readClassFile()
   {
     constant_pool[i] = readCpInfo();
 
-    if (constant_pool[i]->tag == CONSTANT_Double)
+    if (constant_pool[i]->tag == CONSTANT_Double || constant_pool[i]->tag == CONSTANT_Long)
       i++;
   }
 

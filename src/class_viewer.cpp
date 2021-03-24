@@ -7,6 +7,7 @@ ClassViewer::ClassViewer(ClassFile *cf)
 
 void ClassViewer::printClassFile()
 {
+  std::cout << std::hex << "Magic number: 0x" << class_file->magic << std::dec << std::endl;
   std::cout << "Minor version: " << class_file->minor_version << std::endl;
   std::cout << "Major version: " << class_file->major_version << std::endl;
   std::cout << "Constant pool count: " << class_file->constant_pool_count << std::endl;
@@ -21,9 +22,8 @@ void ClassViewer::printClassFile()
     std::cout << "Interface [" << i << "]: " << class_file->interfaces[i] << std::endl;
   }
 
-  std::cout << "Interfaces: " << class_file->interfaces << std::endl;
   std::cout << "Fields count: " << class_file->fields_count << std::endl;
-  //printFields(class_file->fields, class_file->fields_count);
+  printFields(class_file->fields, class_file->fields_count);
   std::cout << "Methods count: " << class_file->methods_count << std::endl;
   printMethods(class_file->methods, class_file->methods_count);
   std::cout << "Attribute count: " << class_file->attributes_count << std::endl;
@@ -38,7 +38,7 @@ void ClassViewer::printConstantPool(cp_info **constant_pool, u2 constant_pool_co
 
     printConstantPoolInfo(constant_pool[i]);
 
-    if (constant_pool[i]->tag == CONSTANT_Double)
+    if (constant_pool[i]->tag == CONSTANT_Double || constant_pool[i]->tag == CONSTANT_Long)
     {
       i++;
       std::cout << "Constant [" << i + 1 << "]: "
@@ -50,6 +50,7 @@ void ClassViewer::printConstantPool(cp_info **constant_pool, u2 constant_pool_co
 void ClassViewer::printConstantPoolInfo(cp_info *constant_pool_entry)
 {
   std::cout << "\ttag: " << unsigned(constant_pool_entry->tag) << std::endl;
+  ;
 
   switch (constant_pool_entry->tag)
   {
@@ -406,6 +407,32 @@ void ClassViewer::printMethodInfo(method_info *method)
   tab_count++;
 
   printAttributes(method->attributes, method->attributes_count);
+
+  tab_count--;
+}
+
+void ClassViewer::printFields(field_info **fields, u2 fields_count)
+{
+  for (int i = 0; i < fields_count; i++)
+  {
+    std::cout << "Field [" << i << "]:" << std::endl;
+
+    printFieldInfo(fields[i]);
+  }
+}
+
+void ClassViewer::printFieldInfo(field_info *field)
+{
+  std::string tabs = std::string(tab_count, '\t');
+
+  std::cout << tabs << std::hex << "\taccess_flags: 0x" << field->access_flags << std::dec << std::endl;
+  std::cout << tabs << "\tname_index: " << field->name_index << std::endl;
+  std::cout << tabs << "\tdescriptor_index: " << field->descriptor_index << std::endl;
+  std::cout << tabs << "\tattributes_count: " << field->attributes_count << std::endl;
+
+  tab_count++;
+
+  printAttributes(field->attributes, field->attributes_count);
 
   tab_count--;
 }
