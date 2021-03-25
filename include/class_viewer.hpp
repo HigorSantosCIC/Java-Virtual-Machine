@@ -53,8 +53,9 @@ private:
   void printMethodInfo(method_info *method);
   void printFields(field_info **fields, u2 fields_count);
   void printFieldInfo(field_info *field);
-  void getInstructionParameters(u1 *code, int &index);
-  
+  void printInstructionParameters(u1 *code, int &index);
+  void printTableSwitch(u1 *code, int table_lines_count, int lowbytes, int defaultbytes, int index, int index_with_padding);
+
   std::string getNameFromIndex(cp_info *constant_pool_getname);
   std::string splitByToken(std::string str, int index);
 };

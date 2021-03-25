@@ -625,7 +625,7 @@ std::string getInstructionNameByOpcode(u1 opcode)
   }
 }
 
-void ClassViewer::getInstructionParameters(u1 *code, int &index)
+void ClassViewer::printInstructionParameters(u1 *code, int &index)
 {
   if (code[index] == 0x10 or (code[index] >= 0x15 and code[index] <= 0x19) or (code[index] >= 0x36 and code[index] <= 0x3a) or code[index] == 0xa9)
   {
@@ -649,7 +649,7 @@ void ClassViewer::getInstructionParameters(u1 *code, int &index)
     u2 cp_index = ((code[index + 1] << 8) | code[index + 2]);
 
     std::string constant_name = getNameFromIndex(class_file->constant_pool[cp_index - 1]);
-    
+
     std::string name = splitByToken(constant_name, 0);
     std::string type = splitByToken(constant_name, 1);
     std::string name_and_type = "<" + name + "." + type + ">";
@@ -672,11 +672,23 @@ void ClassViewer::getInstructionParameters(u1 *code, int &index)
     u1 padding = (index + 1) % 4;
 
     int32_t defaultbytes = (code[padding + index + 1] << 24) | (code[padding + index + 2] << 16) | (code[padding + index + 3] << 8) | code[padding + index + 4];
-
     int32_t lowbytes = (code[padding + index + 5] << 24) | (code[padding + index + 6] << 16) | (code[padding + index + 7] << 8) | code[padding + index + 8];
     int32_t highbytes = (code[padding + index + 9] << 24) | (code[padding + index + 10] << 16) | (code[padding + index + 11] << 8) | code[padding + index + 12];
 
-    std::cout << lowbytes << "to " << highbytes << std::endl;
+    // Recalculates padding to skip the 12 bytes read above
+    padding += 12;
+
+    std::cout << lowbytes << " to " << highbytes << std::endl;
+
+    int table_lines_count = highbytes - lowbytes + 1;
+
+    tab_count++;
+
+    printTableSwitch(code, table_lines_count, lowbytes, defaultbytes, index, padding + index + 1);
+
+    tab_count--;
+
+    index += padding + 4 * table_lines_count;
   }
   else if (code[index] == 0xc5)
   {
@@ -689,6 +701,23 @@ void ClassViewer::getInstructionParameters(u1 *code, int &index)
   {
     std::cout << std::endl;
   }
+}
+
+void ClassViewer::printTableSwitch(u1 *code, int table_lines_count, int lowbytes, int defaultbytes, int index, int index_with_padding)
+{
+  std::string tabs = std::string(tab_count, '\t');
+
+  for (int i = 0; i < table_lines_count; i++)
+  {
+    int32_t jump_offset = (code[index_with_padding] << 24) | (code[index_with_padding + 1] << 16) | (code[index_with_padding + 2] << 8) | code[index_with_padding + 3];
+
+    std::cout << tabs << lowbytes << ": " << index + jump_offset << " (+" << jump_offset << ")" << std::endl;
+
+    index_with_padding += 4;
+    lowbytes++;
+  }
+
+  std::cout << tabs << "default: " << index + defaultbytes << " (+" << defaultbytes << ")" << std::endl;
 }
 
 ClassViewer::ClassViewer(ClassFile *cf)
@@ -1005,7 +1034,7 @@ void ClassViewer::printBytecode(u1 *code, u2 code_length)
   for (int i = 0; i < code_length; i++)
   {
     std::cout << tabs << i << " " << getInstructionNameByOpcode(code[i]) << " ";
-    getInstructionParameters(code, i);
+    printInstructionParameters(code, i);
   }
 }
 
