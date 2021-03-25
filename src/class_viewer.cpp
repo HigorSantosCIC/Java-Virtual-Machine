@@ -648,7 +648,13 @@ void ClassViewer::getInstructionParameters(u1 *code, int &index)
   {
     u2 cp_index = ((code[index + 1] << 8) | code[index + 2]);
 
-    std::cout << "#" << cp_index << " <" << getNameFromIndex(class_file->constant_pool[cp_index - 1]) << ">" << std::endl;
+    std::string constant_name = getNameFromIndex(class_file->constant_pool[cp_index - 1]);
+    
+    std::string name = splitByToken(constant_name, 0);
+    std::string type = splitByToken(constant_name, 1);
+    std::string name_and_type = "<" + name + "." + type + ">";
+
+    std::cout << "#" << cp_index << " " << name_and_type << std::endl;
     index += 2;
   }
   else if (code[index] == 0x84)
@@ -800,10 +806,9 @@ void ClassViewer::printConstantClass(cp_info *class_info_entry)
 void ClassViewer::printConstantFieldref(cp_info *constant_pool_fieldref)
 {
   std::string name = getNameFromIndex(constant_pool_fieldref);
-  std::string name_class_index = split(name, 0);
-  std::string name_and_type_index = split(name, 1);
 
-  name_and_type_index = replaceAll(name_and_type_index, ",", " : ");
+  std::string name_class_index = splitByToken(name, 0);
+  std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
 
   std::cout << "\tclass_index: " << constant_pool_fieldref->info.fieldref_info->class_index << " <" << name_class_index << ">" << std::endl;
   std::cout << "\tname_and_type_index: " << constant_pool_fieldref->info.fieldref_info->name_and_type_index << " <" << name_and_type_index << ">" << std::endl;
@@ -812,10 +817,9 @@ void ClassViewer::printConstantFieldref(cp_info *constant_pool_fieldref)
 void ClassViewer::printConstantMethodref(cp_info *methodref_info_entry)
 {
   std::string name = getNameFromIndex(methodref_info_entry);
-  std::string name_class_index = split(name, 0);
-  std::string name_and_type_index = split(name, 1);
 
-  name_and_type_index = replaceAll(name_and_type_index, ",", " : ");
+  std::string name_class_index = splitByToken(name, 0);
+  std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
 
   std::cout << "\tclass_index: " << methodref_info_entry->info.methodref_info->class_index << " <" << name_class_index << ">" << std::endl;
   std::cout << "\tname_and_type_index: " << methodref_info_entry->info.methodref_info->name_and_type_index << " <" << name_and_type_index << ">" << std::endl;
@@ -824,10 +828,8 @@ void ClassViewer::printConstantMethodref(cp_info *methodref_info_entry)
 void ClassViewer::printConstantInterfaceMethodref(cp_info *interfacemethodref_info_entry)
 {
   std::string name = getNameFromIndex(interfacemethodref_info_entry);
-  std::string name_class_index = split(name, 0);
-  std::string name_and_type_index = split(name, 1);
-
-  name_and_type_index = replaceAll(name_and_type_index, ",", " : ");
+  std::string name_class_index = splitByToken(name, 0);
+  std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
 
   std::cout << "\tclass_index: " << interfacemethodref_info_entry->info.interfaceMethodref_info->class_index << " <" << name_class_index << ">" << std::endl;
   std::cout << "\tname_and_type_index: " << interfacemethodref_info_entry->info.interfaceMethodref_info->name_and_type_index << " <" << name_and_type_index << ">" << std::endl;
@@ -864,10 +866,9 @@ void ClassViewer::printConstantDouble(CONSTANT_Double_info *double_info_entry)
 void ClassViewer::printConstantNameAndType(cp_info *nameandtype_info_entry)
 {
   std::string name = getNameFromIndex(nameandtype_info_entry);
-  std::string name_class_index = split(name, 0);
-  std::string name_descriptor_index = split(name, 1);
 
-  name_descriptor_index = replaceAll(name_descriptor_index, ",", " : ");
+  std::string name_class_index = splitByToken(name, 0);
+  std::string name_descriptor_index = splitByToken(name, 1);
 
   std::cout << "\tname_index: " << nameandtype_info_entry->info.nameAndType_info->name_index << " <" << name_class_index << ">" << std::endl;
   std::cout << "\tdescriptor_index: " << nameandtype_info_entry->info.nameAndType_info->descriptor_index << " <" << name_descriptor_index << ">" << std::endl;
@@ -895,10 +896,8 @@ void ClassViewer::printConstantMethodType(cp_info *methodType_info_entry)
 void ClassViewer::printConstantInvokeDynamic(cp_info *invokeDynamic_info_entry)
 {
   std::string name = getNameFromIndex(invokeDynamic_info_entry);
-  std::string name_bootstrap_index = split(name, 0);
-  std::string name_and_type_index = split(name, 1);
-
-  name_and_type_index = replaceAll(name_and_type_index, ",", " : ");
+  std::string name_bootstrap_index = splitByToken(name, 0);
+  std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
 
   std::cout << "\tbootstrap_method_attr_index: " << invokeDynamic_info_entry->info.invokeDynamic_info->bootstrap_method_attr_index << " <" << name_bootstrap_index << ">" << std::endl;
   std::cout << "\tname_and_type_index: " << invokeDynamic_info_entry->info.invokeDynamic_info->name_and_type_index << " <" << name_and_type_index << ">" << std::endl;
@@ -996,11 +995,7 @@ void ClassViewer::printCodeAttribute(Code_attribute *code_attribute)
 
   std::cout << tabs << "attributes_count: " << code_attribute->attributes_count << std::endl;
 
-  tab_count++;
-
   printAttributes(code_attribute->attributes, code_attribute->attributes_count);
-
-  tab_count--;
 }
 
 void ClassViewer::printBytecode(u1 *code, u2 code_length)
@@ -1077,7 +1072,7 @@ void ClassViewer::printLineNumberTableAttribute(LineNumberTable_attribute *linen
 
   for (int i = 0; i < linenumbertable_attribute->line_number_table_length; i++)
   {
-    std::cout << tabs << "Line number table [" << i << "]" << std::endl;
+    std::cout << tabs << "Line number table [" << i << "]:" << std::endl;
 
     printLineNumberTable(linenumbertable_attribute->line_number_table[i]);
   }
@@ -1253,42 +1248,20 @@ std::string ClassViewer::getNameFromIndex(cp_info *constant_pool_getname)
   }
 }
 
-std::string ClassViewer::replaceAll(std::string str, const std::string &from, const std::string &to)
+std::string ClassViewer::splitByToken(std::string str, int position)
 {
-  size_t start_pos = 0;
-  while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+  std::istringstream iss(str);
+  std::string token;
+
+  int index = 0;
+
+  while (std::getline(iss, token, ','))
   {
-    str.replace(start_pos, from.length(), to);
-    start_pos += to.length();
+    if (index == position)
+      return token;
+
+    index++;
   }
+
   return str;
-}
-
-std::string ClassViewer::split(std::string str, int position)
-{
-  int i = 0;
-  bool flag = false;
-
-  std::string result = "";
-
-  if (position)
-  {
-    while (str[i] != '\0')
-    {
-      if (flag)
-        result += str[i];
-      if (str[i] == ',')
-        flag = true;
-      i++;
-    }
-  }
-  else
-  {
-    while (str[i] != ',' && str[i] != '\0')
-    {
-      result += str[i];
-      i++;
-    }
-  }
-  return result;
 }

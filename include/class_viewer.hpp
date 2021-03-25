@@ -4,6 +4,7 @@
 #include "class_file.hpp"
 #include "constant_pool.hpp"
 #include "attributes.hpp"
+#include <sstream>
 #include <string>
 
 class ClassViewer
@@ -52,12 +53,10 @@ private:
   void printMethodInfo(method_info *method);
   void printFields(field_info **fields, u2 fields_count);
   void printFieldInfo(field_info *field);
-
-  std::string getNameFromIndex(cp_info *constant_pool_getname);
-  std::string split(std::string str, int index);
-  std::string replaceAll(std::string str, const std::string &from, const std::string &to);
-
   void getInstructionParameters(u1 *code, int &index);
+  
+  std::string getNameFromIndex(cp_info *constant_pool_getname);
+  std::string splitByToken(std::string str, int index);
 };
 
 #endif
