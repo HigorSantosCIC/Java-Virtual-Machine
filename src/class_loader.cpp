@@ -1,4 +1,5 @@
 #include "class_loader.hpp"
+
 ClassLoader::ClassLoader(const char *file_name)
 {
   fp = fopen(file_name, "r");

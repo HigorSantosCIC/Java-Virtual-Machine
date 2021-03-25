@@ -20,20 +20,20 @@ private:
   void printInterfaces();
   void printConstantPool(cp_info **constant_pool, u2 constant_pool_count);
   void printConstantPoolInfo(cp_info *constant_pool_entry);
-  void printConstantClass(CONSTANT_Class_info *class_info_entry);
-  void printConstantFieldref(CONSTANT_Fieldref_info *fieldref_info_entry);
-  void printConstantMethodref(CONSTANT_Methodref_info *methodref_info_entry);
-  void printConstantInterfaceMethodref(CONSTANT_InterfaceMethodref_info *interfacemethodref_info_entry);
-  void printConstantString(CONSTANT_String_info *string_info_entry);
+  void printConstantClass(cp_info *class_info_entry);
+  void printConstantFieldref(cp_info *constant_pool_fieldref);
+  void printConstantMethodref(cp_info *methodref_info_entry);
+  void printConstantInterfaceMethodref(cp_info *interfacemethodref_info_entry);
+  void printConstantString(cp_info *string_info_entry);
   void printConstantInteger(CONSTANT_Integer_info *integer_info_entry);
   void printConstantFloat(CONSTANT_Float_info *float_info_entry);
   void printConstantLong(CONSTANT_Long_info *long_info_entry);
   void printConstantDouble(CONSTANT_Double_info *double_info_entry);
-  void printConstantNameAndType(CONSTANT_NameAndType_info *nameandtype_info_entry);
+  void printConstantNameAndType(cp_info *nameandtype_info_entry);
   void printConstantUtf8(CONSTANT_Utf8_info *utf8_info_entry);
-  void printConstantMethodHandle(CONSTANT_MethodHandle_info *methodhandle_info_entry);
-  void printConstantMethodType(CONSTANT_MethodType_info *methodType_info_entry);
-  void printConstantInvokeDynamic(CONSTANT_InvokeDynamic_info *invokeDynamic_info_entry);
+  void printConstantMethodHandle(cp_info *methodhandle_info_entry);
+  void printConstantMethodType(cp_info *methodType_info_entry);
+  void printConstantInvokeDynamic(cp_info *invokeDynamic_info_entry);
   void printAttributes(attribute_info **attributes, u2 attribute_count);
   void printAttributeByIndex(attribute_info *attribute);
   void printConstantValueAttribute(ConstantValue_attribute *constantvalue_attribute);
@@ -51,6 +51,9 @@ private:
   void printMethodInfo(method_info *method);
   void printFields(field_info **fields, u2 fields_count);
   void printFieldInfo(field_info *field);
+  std::string getNameFromIndex(cp_info *constant_pool_getname);
+  std::string split(std::string str, int index);
+  std::string replaceAll(std::string str, const std::string& from, const std::string& to);
 };
 
 #endif
