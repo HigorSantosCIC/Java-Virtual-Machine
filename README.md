@@ -19,9 +19,9 @@ Then, to execute the JVM, use:
 - **\<PATH\>**: Path to .class file that will be read by the JVM.
 
 
-Avaliação ----
+# Avaliação 
 
-Defesa (100)
+# Defesa (100)
 
    - Componente 1  
    - Componente 2 
@@ -30,7 +30,7 @@ Defesa (100)
    - Componente 5
 
 -------------------------
- Corretude do interpretador 
+# Corretude do interpretador 
 
 Resumo: 100
 
@@ -69,7 +69,7 @@ Resumo: 100
 33. () herança
 -------------------------
 
-Resumo: 100
+# Resumo: 100
 
 -- leitura do formato ponto class:
 - Trata versões superiores? 
@@ -80,10 +80,10 @@ Resumo: 100
 - Apresenta reindireção das entradas no Constant Pool?
 
 
-Bonus: 10% (bonus sobre a corretude do interpretador)
+# Bonus: 10% (bonus sobre a corretude do interpretador)
 
 --  opcionais 
-Todas as demais instruções.
+# Todas as demais instruções.
 
 ( ) threads
 ( ) debug
@@ -93,10 +93,10 @@ Todas as demais instruções.
 -------------------------
 
 
-Atribuição de nota para a JVM
+# Atribuição de nota para a JVM
 0,3leitor_exibidor + 0,5corretude + 0,1defesa do interpretador + 0,1site
 
-Site: 100 
+# Site: 100 
 
 - Apresenta o Diagrama de Comunicação entre os Módulos e a descrição de cada função?
 - Contem a relação das estruturas de dados e os arquivos?
