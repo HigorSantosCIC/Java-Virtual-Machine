@@ -23,11 +23,11 @@ Avaliação ----
 
 Defesa (100)
 
-   Componente 1 - 
-   Componente 2 - 
-   Componente 3 - 
-   Componente 4 - 
-   Componente 5 - 
+   - Componente 1  
+   - Componente 2 
+   - Componente 3 
+   - Componente 4  
+   - Componente 5
 
 -------------------------
  Corretude do interpretador 
