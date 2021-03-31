@@ -71,7 +71,7 @@ Resumo: 100
 
 # Resumo: 100
 
--- leitura do formato ponto class:
+# Leitura do formato ponto class:
 - Trata versões superiores? 
 - Despreza silenciosamente atributos não tratados?
 - Consistência?
@@ -82,7 +82,7 @@ Resumo: 100
 
 # Bonus: 10% (bonus sobre a corretude do interpretador)
 
---  opcionais 
+- Opcionais 
 # Todas as demais instruções.
 
 ( ) threads
@@ -94,7 +94,7 @@ Resumo: 100
 
 
 # Atribuição de nota para a JVM
-0,3leitor_exibidor + 0,5corretude + 0,1defesa do interpretador + 0,1site
+0,3 leitor_exibidor + 0,5 corretude + 0,1 defesa do interpretador + 0,1 site
 
 # Site: 100 
 
