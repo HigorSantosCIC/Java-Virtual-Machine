@@ -690,6 +690,18 @@ void ClassViewer::printInstructionParameters(u1 *code, int &index)
 
     index += padding + 4 * table_lines_count;
   }
+  else if (code[index] == 0xbc)
+  {
+    // atype is read with a +4 offset. When acessing types[idx], make sure that idx = atype - 4.
+    u1 atype = code[index + 1];
+
+    // Types are ordered as specified in JVMS8 documentation
+    const char *types[] = {"boolean", "char", "float", "double", "byte", "short", "int", "long"};
+
+    std::cout << unsigned(atype) << " (" << types[atype - 4] << ")" << std::endl;
+
+    index += 1;
+  }
   else if (code[index] == 0xc5)
   {
     u2 cp_index = (code[index + 1] << 8) | code[index + 2];
@@ -1270,8 +1282,12 @@ std::string ClassViewer::getNameFromIndex(cp_info *constant_pool_getname)
     }
 
     return s;
+  case CONSTANT_Double:
+    //TODO
+
+    return "TODO";
   default:
-    std::cout << "VALOR DE TAG NÃO ENCONTRADO! tag: " << constant_pool_getname->tag << std::endl;
+    std::cout << "Tag <" << constant_pool_getname->tag << "> not found." << std::endl;
 
     return "";
   }
