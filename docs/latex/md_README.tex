@@ -1,0 +1,96 @@
+This repository contains an implementation of a Java Virtual Machine (J\+VM) that supports Java SE 8.
+
+The entire code is based on a J\+VM specification by Tim Lindholm, Frank Yellin, Gilad Bracha and Alex Buckley, available in the official Oracle\textquotesingle{}s documentation.\hypertarget{md_README_autotoc_md1}{}\doxysection{Usage}\label{md_README_autotoc_md1}
+In order to compile, link and build this project on Linux, paste the following command on a command line\+:
+
+\begin{quote}
+\$ make clean \&\& make \end{quote}
+
+
+Then, to execute the J\+VM, use\+:
+
+\begin{quote}
+\$ ./bin/jvm $<$P\+A\+TH$>$ \end{quote}
+\hypertarget{md_README_autotoc_md2}{}\doxysubsection{Flags\+:}\label{md_README_autotoc_md2}
+
+\begin{DoxyItemize}
+\item $\ast$$\ast$$<$P\+A\+TH$>$$\ast$$\ast$\+: Path to .class file that will be read by the J\+VM.
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md3}{}\doxysection{Avaliação}\label{md_README_autotoc_md3}
+\hypertarget{md_README_autotoc_md4}{}\doxysection{Defesa (100)}\label{md_README_autotoc_md4}
+
+\begin{DoxyItemize}
+\item Componente 1 ~\newline
+
+\item Componente 2
+\item Componente 3
+\item Componente 4 ~\newline
+
+\item Componente 5
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+ \hypertarget{md_README_autotoc_md6}{}\doxysection{Corretude do interpretador}\label{md_README_autotoc_md6}
+Resumo\+: 100
+
+
+\begin{DoxyEnumerate}
+\item () array simples
+\item () arrays.\+length
+\item () arrays multidimensionais
+\item () arrays de referencia
+\item () doubles
+\item () floats
+\item () longs
+\item () inteiros
+\item () shorts
+\item () strings
+\item () desvios com cat 1
+\item () operacoes logicas com cat 1
+\item () operacoes de deslocamento com cat 1
+\item () operacoes aritmeticas de cat 2
+\item () operacoes de deslocamento de longs
+\item () system.\+out.\+println (int, float, string e booleano)
+\item () conversao de e para cat 2
+\item () iteracao
+\item () switches
+\item () fields
+\item () interfaces
+\item () recursao
+\item () metodos estaticos
+\item () metodos nao estaticos
+\item () objetos
+\item () operacoes de retorno
+\item () operacoes de manipulacao de pilha
+\item () consistencia
+\item () exceptions
+\item () invokes
+\item () polimorfismo
+\item () reescrita 
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md7}{}\doxysubsection{33. () herança}\label{md_README_autotoc_md7}
+\hypertarget{md_README_autotoc_md8}{}\doxysection{Resumo\+: 100}\label{md_README_autotoc_md8}
+\hypertarget{md_README_autotoc_md9}{}\doxysection{Leitura do formato ponto class\+:}\label{md_README_autotoc_md9}
+
+\begin{DoxyItemize}
+\item Trata versões superiores?
+\item Despreza silenciosamente atributos não tratados?
+\item Consistência?
+\item Corretude?
+\item Exibe mnemônicos?
+\item Apresenta reindireção das entradas no Constant Pool?
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md10}{}\doxysection{Bonus\+: 10\% (bonus sobre a corretude do interpretador)}\label{md_README_autotoc_md10}
+
+\begin{DoxyItemize}
+\item Opcionais 
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md11}{}\doxysection{Todas as demais instruções.}\label{md_README_autotoc_md11}
+( ) threads ( ) debug ( ) checagem dinâmica de tipos ( ) coletor de lixo.
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md13}{}\doxysection{Atribuição de nota para a J\+VM}\label{md_README_autotoc_md13}
+0,3 leitor\+\_\+exibidor + 0,5 corretude + 0,1 defesa do interpretador + 0,1 site\hypertarget{md_README_autotoc_md14}{}\doxysection{Site\+: 100}\label{md_README_autotoc_md14}
+
+\begin{DoxyItemize}
+\item Apresenta o Diagrama de Comunicação entre os Módulos e a descrição de cada função?
+\item Contem a relação das estruturas de dados e os arquivos?
+\item Está atualizado?
+\item Corretude? 
+\end{DoxyItemize}
