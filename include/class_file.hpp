@@ -6,6 +6,7 @@
 #include "fields.hpp"
 #include "methods.hpp"
 #include "attributes.hpp"
+#include <string.h>
 
 typedef struct
 {
@@ -25,6 +26,7 @@ typedef struct
   method_info **methods;
   u2 attributes_count;
   attribute_info **attributes;
+  std::string getClassName();
 } ClassFile;
 
 #endif

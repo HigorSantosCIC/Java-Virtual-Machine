@@ -6,6 +6,8 @@
 #include "class_loader.hpp"
 #include "memory_cleaner.hpp"
 #include "class_viewer.hpp"
+#include "runtime_data_area.hpp"
+#include "interpreter.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -20,8 +22,21 @@ int main(int argc, char *argv[])
 
   ClassLoader class_loader(file_name);
   class_loader.readClassFile();
-  
+
   ClassFile *class_file = class_loader.getClassFile();
+
+  // Instantiante runtime data area that contains classes and frames data
+  //RuntimeDataArea runtime_data_area;
+
+  // Insert loaded class into method area
+  std::string class_name = class_file->getClassName();
+  //runtime_data_area.method_area->addClass("class_name", class_file);
+
+  std::cout << "Class name: " << class_name;
+
+  // Initialize frame stack with main and init methods, after inserting loaded class file in method area.
+
+  Interpreter interpreter();
 
   ClassViewer class_viewer(class_file);
   class_viewer.printClassFile();

@@ -2,6 +2,7 @@
 #define FRAME_STACK_HPP
 
 #include <stack>
+
 #include <stdlib.h>
 #include "frame.hpp"
 
@@ -37,8 +38,8 @@ public:
      */
     bool isEmpty();
 
-private: 
-    stack<Frame *> frame_stack;
+private:
+    std::stack<Frame *> frame_stack;
 };
 
 #endif

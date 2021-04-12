@@ -4,11 +4,11 @@
 #include <int_types.hpp>
 #include <constant_pool.hpp>
 #include <stack>
-#include <map>
+#include <unordered_map>
 #include "generic_type.hpp"
 
 /**
- * A frame is a data structure that contains information about the current method executed by the interpreter. All frames are stack in a FrameStack.
+ * A frame is a data structure that contains information about the methods executed by the interpreter. All frames are stack in a FrameStack.
  
  */
 class Frame
@@ -22,8 +22,8 @@ public:
     ~Frame();
 
 private:
-    unordered_map<int, GenericType *> local_variables;
-    stack<GenericType *> operand_stack;
+    std::unordered_map<int, GenericType *> local_variables;
+    std::stack<GenericType *> operand_stack;
     cp_info **constant_pool;
     u4 pc;
 };
