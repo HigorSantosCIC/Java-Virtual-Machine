@@ -8,7 +8,7 @@
 #include "generic_type.hpp"
 
 /**
- * A frame is a data structure that contains information about the current method executed by the interpreter.
+ * A frame is a data structure that contains information about the current method executed by the interpreter. All frames are stack in a FrameStack.
  
  */
 class Frame

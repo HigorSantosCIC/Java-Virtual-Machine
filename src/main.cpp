@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 
   ClassLoader class_loader(file_name);
   class_loader.readClassFile();
+  
   ClassFile *class_file = class_loader.getClassFile();
 
   ClassViewer class_viewer(class_file);

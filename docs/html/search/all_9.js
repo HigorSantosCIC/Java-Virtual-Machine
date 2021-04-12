@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sourcefile_5fattribute_35',['SourceFile_attribute',['../structSourceFile__attribute.html',1,'']]],
-  ['synthetic_5fattribute_36',['Synthetic_attribute',['../structSynthetic__attribute.html',1,'']]]
+  ['pop_37',['pop',['../classFrameStack.html#a7da31bde9fe2f7cf6a4e2497445223a5',1,'FrameStack']]],
+  ['push_38',['push',['../classFrameStack.html#a53d65a2ecd217d894c82cb6106d8ad9c',1,'FrameStack']]]
 ];
