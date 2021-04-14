@@ -56,8 +56,6 @@ private:
   void printInstructionParameters(u1 *code, int &index);
   void printTableSwitch(u1 *code, int table_lines_count, int lowbytes, int defaultbytes, int index, int index_with_padding);
 
-  // TODO: Remove method from class viewer. Move to ClassFile (and later, to LoadedClassFile).
-  std::string getNameFromConstantPoolEntry(cp_info *constant_pool_entry);
   std::string splitByToken(std::string str, int index);
 };
 
