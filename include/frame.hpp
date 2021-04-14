@@ -21,6 +21,8 @@ public:
     Frame(cp_info **constant_pool);
     ~Frame();
 
+    u4 getPc();
+
 private:
     std::unordered_map<int, GenericType *> local_variables;
     std::stack<GenericType *> operand_stack;

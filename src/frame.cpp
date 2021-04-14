@@ -1,10 +1,16 @@
 #include <frame.hpp>
 
-Frame::Frame(cp_info **)
+Frame::Frame(cp_info **cp)
 {
-    //TODO
+    constant_pool = cp;
+    pc = 0;
 }
 
 Frame::~Frame()
 {
+}
+
+u4 Frame::getPc()
+{
+    return pc;
 }

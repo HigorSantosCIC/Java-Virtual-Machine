@@ -24,19 +24,18 @@ int main(int argc, char *argv[])
   class_loader.readClassFile();
 
   ClassFile *class_file = class_loader.getClassFile();
-
-  // Instantiante runtime data area that contains classes and frames data
-  //RuntimeDataArea runtime_data_area;
-
-  // Insert loaded class into method area
   std::string class_name = class_file->getClassName();
-  //runtime_data_area.method_area->addClass("class_name", class_file);
 
-  std::cout << "Class name: " << class_name;
+  Frame *main_frame = new Frame(class_file->constant_pool);
 
-  // Initialize frame stack with main and init methods, after inserting loaded class file in method area.
+  RuntimeDataArea runtime_data_area;
+  runtime_data_area.method_area->addClass(class_name, class_file);
+
+  // Initialize frame stack with main and (TODO) init (if exists) methods
+  runtime_data_area.frame_stack->push(main_frame);
 
   Interpreter interpreter();
+  interpreter.run();
 
   ClassViewer class_viewer(class_file);
   class_viewer.printClassFile();

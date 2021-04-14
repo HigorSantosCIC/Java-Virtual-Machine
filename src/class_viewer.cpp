@@ -641,14 +641,14 @@ void ClassViewer::printInstructionParameters(u1 *code, int &index)
   {
     u1 cp_index = code[index + 1];
 
-    std::cout << "#" << unsigned(cp_index) << " <" << getNameFromIndex(class_file->constant_pool[cp_index - 1]) << ">" << std::endl;
+    std::cout << "#" << unsigned(cp_index) << " <" << getNameFromConstantPoolEntry(class_file->constant_pool[cp_index - 1]) << ">" << std::endl;
     index += 1;
   }
   else if (code[index] == 0x13 or code[index] == 0x14 or (code[index] >= 0xb2 and code[index] <= 0xb8) or code[index] == 0xbb or code[index] == 0xbd or code[index] == 0xc0 or code[index] == 0xc1)
   {
     u2 cp_index = ((code[index + 1] << 8) | code[index + 2]);
 
-    std::string constant_name = getNameFromIndex(class_file->constant_pool[cp_index - 1]);
+    std::string constant_name = getNameFromConstantPoolEntry(class_file->constant_pool[cp_index - 1]);
 
     std::string name = splitByToken(constant_name, 0);
     std::string type = splitByToken(constant_name, 1);
@@ -706,7 +706,7 @@ void ClassViewer::printInstructionParameters(u1 *code, int &index)
   {
     u2 cp_index = (code[index + 1] << 8) | code[index + 2];
 
-    std::cout << "#" << cp_index << " <" << getNameFromIndex(class_file->constant_pool[cp_index - 1]) << "> dim " << unsigned(code[index + 3]) << std::endl;
+    std::cout << "#" << cp_index << " <" << getNameFromConstantPoolEntry(class_file->constant_pool[cp_index - 1]) << "> dim " << unsigned(code[index + 3]) << std::endl;
     index += 3;
   }
   else
@@ -839,14 +839,14 @@ void ClassViewer::printConstantPoolInfo(cp_info *constant_pool_entry)
 
 void ClassViewer::printConstantClass(cp_info *class_info_entry)
 {
-  std::string name = getNameFromIndex(class_info_entry);
+  std::string name = getNameFromConstantPoolEntry(class_info_entry);
 
   std::cout << "\tname_index: " << class_info_entry->info.class_info->name_index << " <" << name << ">" << std::endl;
 }
 
 void ClassViewer::printConstantFieldref(cp_info *constant_pool_fieldref)
 {
-  std::string name = getNameFromIndex(constant_pool_fieldref);
+  std::string name = getNameFromConstantPoolEntry(constant_pool_fieldref);
 
   std::string name_class_index = splitByToken(name, 0);
   std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
@@ -857,7 +857,7 @@ void ClassViewer::printConstantFieldref(cp_info *constant_pool_fieldref)
 
 void ClassViewer::printConstantMethodref(cp_info *methodref_info_entry)
 {
-  std::string name = getNameFromIndex(methodref_info_entry);
+  std::string name = getNameFromConstantPoolEntry(methodref_info_entry);
 
   std::string name_class_index = splitByToken(name, 0);
   std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
@@ -868,7 +868,7 @@ void ClassViewer::printConstantMethodref(cp_info *methodref_info_entry)
 
 void ClassViewer::printConstantInterfaceMethodref(cp_info *interfacemethodref_info_entry)
 {
-  std::string name = getNameFromIndex(interfacemethodref_info_entry);
+  std::string name = getNameFromConstantPoolEntry(interfacemethodref_info_entry);
   std::string name_class_index = splitByToken(name, 0);
   std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
 
@@ -878,7 +878,7 @@ void ClassViewer::printConstantInterfaceMethodref(cp_info *interfacemethodref_in
 
 void ClassViewer::printConstantString(cp_info *string_info_entry)
 {
-  std::string name = getNameFromIndex(string_info_entry);
+  std::string name = getNameFromConstantPoolEntry(string_info_entry);
   std::cout << "\tstring_index: " << string_info_entry->info.string_info->string_index << " <" << name << ">" << std::endl;
 }
 
@@ -906,7 +906,7 @@ void ClassViewer::printConstantDouble(CONSTANT_Double_info *double_info_entry)
 
 void ClassViewer::printConstantNameAndType(cp_info *nameandtype_info_entry)
 {
-  std::string name = getNameFromIndex(nameandtype_info_entry);
+  std::string name = getNameFromConstantPoolEntry(nameandtype_info_entry);
 
   std::string name_class_index = splitByToken(name, 0);
   std::string name_descriptor_index = splitByToken(name, 1);
@@ -923,20 +923,20 @@ void ClassViewer::printConstantUtf8(CONSTANT_Utf8_info *utf8_info_entry)
 
 void ClassViewer::printConstantMethodHandle(cp_info *methodhandle_info_entry)
 {
-  std::string name = getNameFromIndex(methodhandle_info_entry);
+  std::string name = getNameFromConstantPoolEntry(methodhandle_info_entry);
   std::cout << "\treference_kind: " << methodhandle_info_entry->info.methodHandle_info->reference_kind << std::endl;
   std::cout << "\treference_index: " << methodhandle_info_entry->info.methodHandle_info->reference_index << " <" << name << ">" << std::endl;
 }
 
 void ClassViewer::printConstantMethodType(cp_info *methodType_info_entry)
 {
-  std::string name = getNameFromIndex(methodType_info_entry);
+  std::string name = getNameFromConstantPoolEntry(methodType_info_entry);
   std::cout << "\tdescriptor_index: " << methodType_info_entry->info.methodType_info->descriptor_index << " <" << name << ">" << std::endl;
 }
 
 void ClassViewer::printConstantInvokeDynamic(cp_info *invokeDynamic_info_entry)
 {
-  std::string name = getNameFromIndex(invokeDynamic_info_entry);
+  std::string name = getNameFromConstantPoolEntry(invokeDynamic_info_entry);
   std::string name_bootstrap_index = splitByToken(name, 0);
   std::string name_and_type_index = splitByToken(name, 1) + " : " + splitByToken(name, 2);
 
@@ -1210,75 +1210,75 @@ void ClassViewer::printFieldInfo(field_info *field)
   tab_count--;
 }
 
-std::string ClassViewer::getNameFromIndex(cp_info *constant_pool_getname)
+std::string ClassViewer::getNameFromConstantPoolEntry(cp_info *constant_pool_entry)
 {
   std::string s = "";
   std::string s1 = "";
   std::string s2 = "";
   u2 index;
 
-  switch (constant_pool_getname->tag)
+  switch (constant_pool_entry->tag)
   {
   case CONSTANT_Class:
-    index = constant_pool_getname->info.class_info->name_index - 1;
+    index = constant_pool_entry->info.class_info->name_index - 1;
 
-    return getNameFromIndex(class_file->constant_pool[index]);
+    return getNameFromConstantPoolEntry(class_file->constant_pool[index]);
   case CONSTANT_String:
-    index = constant_pool_getname->info.string_info->string_index - 1;
+    index = constant_pool_entry->info.string_info->string_index - 1;
 
-    return getNameFromIndex(class_file->constant_pool[index]);
+    return getNameFromConstantPoolEntry(class_file->constant_pool[index]);
   case CONSTANT_Fieldref:
-    index = constant_pool_getname->info.fieldref_info->class_index - 1;
-    s1 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.fieldref_info->class_index - 1;
+    s1 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
-    index = constant_pool_getname->info.fieldref_info->name_and_type_index - 1;
-    s2 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.fieldref_info->name_and_type_index - 1;
+    s2 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
     return s1 + "," + s2;
   case CONSTANT_Methodref:
-    index = constant_pool_getname->info.methodref_info->class_index - 1;
-    s1 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.methodref_info->class_index - 1;
+    s1 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
-    index = constant_pool_getname->info.methodref_info->name_and_type_index - 1;
-    s2 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.methodref_info->name_and_type_index - 1;
+    s2 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
     return s1 + "," + s2;
   case CONSTANT_InterfaceMethodref:
-    index = constant_pool_getname->info.interfaceMethodref_info->class_index - 1;
-    s1 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.interfaceMethodref_info->class_index - 1;
+    s1 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
-    index = constant_pool_getname->info.interfaceMethodref_info->name_and_type_index - 1;
-    s2 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.interfaceMethodref_info->name_and_type_index - 1;
+    s2 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
     return s1 + "," + s2;
   case CONSTANT_NameAndType:
-    index = constant_pool_getname->info.nameAndType_info->name_index - 1;
-    s1 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.nameAndType_info->name_index - 1;
+    s1 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
-    index = constant_pool_getname->info.nameAndType_info->descriptor_index - 1;
-    s2 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.nameAndType_info->descriptor_index - 1;
+    s2 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
     return s1 + "," + s2;
   case CONSTANT_MethodHandle:
-    index = constant_pool_getname->info.methodHandle_info->reference_index - 1;
+    index = constant_pool_entry->info.methodHandle_info->reference_index - 1;
 
-    return getNameFromIndex(class_file->constant_pool[index]);
+    return getNameFromConstantPoolEntry(class_file->constant_pool[index]);
   case CONSTANT_MethodType:
-    index = constant_pool_getname->info.methodType_info->descriptor_index - 1;
+    index = constant_pool_entry->info.methodType_info->descriptor_index - 1;
 
-    return getNameFromIndex(class_file->constant_pool[index]);
+    return getNameFromConstantPoolEntry(class_file->constant_pool[index]);
   case CONSTANT_InvokeDynamic:
-    index = constant_pool_getname->info.invokeDynamic_info->bootstrap_method_attr_index - 1;
-    s1 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.invokeDynamic_info->bootstrap_method_attr_index - 1;
+    s1 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
-    index = constant_pool_getname->info.invokeDynamic_info->name_and_type_index - 1;
-    s2 = getNameFromIndex(class_file->constant_pool[index]);
+    index = constant_pool_entry->info.invokeDynamic_info->name_and_type_index - 1;
+    s2 = getNameFromConstantPoolEntry(class_file->constant_pool[index]);
 
     return s1 + "," + s2;
   case CONSTANT_Utf8:
-    for (int i = 0; i < constant_pool_getname->info.utf8_info->length; i++)
+    for (int i = 0; i < constant_pool_entry->info.utf8_info->length; i++)
     {
-      s += constant_pool_getname->info.utf8_info->bytes[i];
+      s += constant_pool_entry->info.utf8_info->bytes[i];
     }
 
     return s;
@@ -1287,7 +1287,7 @@ std::string ClassViewer::getNameFromIndex(cp_info *constant_pool_getname)
 
     return "TODO";
   default:
-    std::cout << "Tag <" << constant_pool_getname->tag << "> not found." << std::endl;
+    std::cout << "Tag <" << constant_pool_entry->tag << "> not found." << std::endl;
 
     return "";
   }
