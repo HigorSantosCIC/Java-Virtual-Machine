@@ -22,3 +22,8 @@ bool FrameStack::isEmpty()
 {
     return frame_stack.empty();
 }
+
+Frame *FrameStack::getTop()
+{
+    return frame_stack.top();
+}

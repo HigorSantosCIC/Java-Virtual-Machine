@@ -30,6 +30,24 @@ typedef struct
   std::string getClassName();
   method_info *searchMethodByNameAndDescriptor(std::string method_name, std::string method_descriptor);
   std::string getNameFromConstantPoolEntry(cp_info *constant_pool_entry);
+  u1 *getCodeByMethod(method_info *method);
+
+  /**
+     * @brief 
+     * 1) Fetch method in class_file;
+     * 
+     * 2) Fetch code in method attributes;
+     * 
+     * 3) Extract instruction or operand indexed by pc register.
+     * @param class_name Key to the class file pointer in classes unordered map.
+     * @param method_name Method name to be searched in class file identified by class_name.
+     * @param method_descriptor Method descriptor to be searched in class file identified by class_name.
+     * @param pc index that points to code[] position to be returned.
+     * @return (u1) instruction or operand indexed by pc
+     * @return (NULL) if class, method or code is not found.
+     */
+  u1 getInstructionOrOperand(std::string method_name, std::string method_descriptor, u4 pc);
+
 } ClassFile;
 
 #endif

@@ -26,15 +26,7 @@ public:
      */
     void removeClass(std::string class_name);
 
-    /**
-     * @brief Search a given method in the specified class_file.
-     * @param class_name Key to the class file pointer in classes unordered map.
-     * @param method_name Method name to be searched in class file identified by class_name
-     * @param method_descriptor Method descriptor to be searched in class file identified by class_name
-     * @return (method_info *) object that corresponds to the method_name argument.
-     * @return (NULL) if name or descriptor doesn't match any existing method in classfile.
-     */
-    method_info *getClassMethodByNameAndDescriptor(std::string class_name, std::string method_name, std::string method_descriptor);
+    ClassFile *getClassFile(std::string class_name);
 
 private:
     std::unordered_map<std::string, ClassFile *> classes;

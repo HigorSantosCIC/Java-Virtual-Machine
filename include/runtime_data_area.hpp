@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <frame_stack.hpp>
 #include <method_area.hpp>
-
 class RuntimeDataArea
 {
 public:
@@ -12,6 +11,8 @@ public:
     ~RuntimeDataArea();
 
     void initializeFrameStack();
+
+    u1 fetchInstruction();
 
     FrameStack *frame_stack;
     MethodArea *method_area;

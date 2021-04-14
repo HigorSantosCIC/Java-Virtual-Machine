@@ -115,3 +115,31 @@ std::string ClassFile::getNameFromConstantPoolEntry(cp_info *constant_pool_entry
         return "";
     }
 }
+
+u1 *ClassFile::getCodeByMethod(method_info *method)
+{
+    for (int i = 0; i < method->attributes_count; i++)
+    {
+        u2 attribute_name_index = method->attributes[i]->attribute_name_index;
+
+        if (getNameFromConstantPoolEntry(constant_pool[attribute_name_index - 1]) == "Code")
+            return method->attributes[i]->attribute.code_attribute->code;
+    }
+
+    return NULL;
+}
+
+u1 ClassFile::getInstructionOrOperand(std::string method_name, std::string method_descriptor, u4 pc)
+{
+    method_info *method = searchMethodByNameAndDescriptor(method_name, method_descriptor);
+
+    if (method == NULL)
+        return NULL;
+
+    u1 *code = getCodeByMethod(method);
+
+    if (code == NULL)
+        return NULL;
+
+    return code[pc];
+}

@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
   ClassFile *class_file = class_loader.getClassFile();
   std::string class_name = class_file->getClassName();
 
-  Frame *main_frame = new Frame(class_file->constant_pool);
+  Frame *main_frame = new Frame(class_file, "main", "([Ljava/lang/String;)V");
 
   RuntimeDataArea runtime_data_area;
   runtime_data_area.method_area->addClass(class_name, class_file);
@@ -35,7 +35,8 @@ int main(int argc, char *argv[])
   runtime_data_area.frame_stack->push(main_frame);
 
   Interpreter interpreter();
-  interpreter.run();
+
+  // TODO: Fetch-decode-execute cycle
 
   ClassViewer class_viewer(class_file);
   class_viewer.printClassFile();

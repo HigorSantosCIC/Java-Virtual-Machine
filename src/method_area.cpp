@@ -10,14 +10,14 @@ void MethodArea::removeClass(std::string class_name)
     classes.erase(classes.find(class_name));
 }
 
-method_info *MethodArea::getClassMethodByNameAndDescriptor(std::string class_name, std::string method_name, std::string method_descriptor)
+ClassFile *MethodArea::getClassFile(std::string class_name)
 {
     if (!isClassLoaded(class_name))
         return NULL;
 
     ClassFile *class_file = classes[class_name];
 
-    return class_file->searchMethodByNameAndDescriptor(method_name, method_descriptor);
+    return class_file;
 }
 
 bool MethodArea::isClassLoaded(std::string class_name)

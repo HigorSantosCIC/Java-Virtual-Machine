@@ -38,6 +38,8 @@ public:
      */
     bool isEmpty();
 
+    Frame *getTop();
+
 private:
     std::stack<Frame *> frame_stack;
 };
