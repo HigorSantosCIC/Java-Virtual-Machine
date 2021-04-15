@@ -12,7 +12,7 @@ public:
 
     void initializeFrameStack();
 
-    u1 fetchInstruction();
+    u1 fetchInstruction(u2 pc_offset);
 
     FrameStack *frame_stack;
     MethodArea *method_area;

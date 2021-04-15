@@ -21,11 +21,18 @@ public:
     Frame(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor);
     ~Frame();
 
+    void pushValueIntoOperandStack(GenericType *value);
+
     // Getters
     u4 getPc();
     std::string getClassName();
     std::string getMethodName();
     std::string getMethodDescriptor();
+    cp_info **getConstantPool();
+    GenericType *getTopOperand();
+
+    // Setters
+    void setPcByOffset(int offset);
 
 private:
     std::unordered_map<int, GenericType *> local_variables;

@@ -32,3 +32,23 @@ std::string Frame::getMethodDescriptor()
 {
     return method_descriptor;
 }
+
+cp_info **Frame::getConstantPool()
+{
+    return constant_pool;
+}
+
+GenericType *Frame::getTopOperand()
+{
+    return operand_stack.top();
+}
+
+void Frame::setPcByOffset(int offset)
+{
+    pc += offset;
+}
+
+void Frame::pushValueIntoOperandStack(GenericType *value)
+{
+    operand_stack.push(value);
+}

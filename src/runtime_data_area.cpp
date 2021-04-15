@@ -14,12 +14,13 @@ void RuntimeDataArea::initializeFrameStack()
 {
 }
 
-u1 RuntimeDataArea::fetchInstruction()
+u1 RuntimeDataArea::fetchInstruction(u2 pc_offset)
 {
     Frame *current_frame = frame_stack->getTop();
 
     // Get current frame info
     u4 pc = current_frame->getPc();
+    pc += pc_offset;
 
     std::string class_name = current_frame->getClassName();
     ClassFile *class_file = method_area->getClassFile(class_name);

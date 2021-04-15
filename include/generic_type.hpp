@@ -5,14 +5,14 @@ typedef struct
 {
     union
     {
-        bool booleanValue;
-        int8_t byteValue;
-        u1 charValue;
-        double doubleValue;
-        float floatValue;
-        int32_t intValue;
-        int64_t longValue;
-        int16_t shortValue;
+        bool boolean_value;
+        int8_t byte_value;
+        u1 char_value;
+        double double_value;
+        float float_value;
+        int32_t int_value;
+        int64_t long_value;
+        int16_t short_value;
     } data;
 } GenericType;
 
