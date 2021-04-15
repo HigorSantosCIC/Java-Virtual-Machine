@@ -1,0 +1,37 @@
+digraph "field_info"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="field_info",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" attributes" ];
+  Node2 [label="attribute_info",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structattribute__info.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" linenumbertable_attribute" ];
+  Node3 [label="LineNumberTable_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structLineNumberTable__attribute.html",tooltip=" "];
+  Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" line_number_table" ];
+  Node4 [label="line_number_table_info",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structline__number__table__info.html",tooltip=" "];
+  Node5 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" constantvalue_attribute" ];
+  Node5 [label="ConstantValue_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structConstantValue__attribute.html",tooltip=" "];
+  Node6 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" synthetic_attribute" ];
+  Node6 [label="Synthetic_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structSynthetic__attribute.html",tooltip=" "];
+  Node7 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" innerclasses_attribute" ];
+  Node7 [label="InnerClasses_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structInnerClasses__attribute.html",tooltip=" "];
+  Node8 -> Node7 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" classes" ];
+  Node8 [label="attributes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structattributes.html",tooltip=" "];
+  Node9 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" sourcefile_attribute" ];
+  Node9 [label="SourceFile_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structSourceFile__attribute.html",tooltip=" "];
+  Node10 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" deprecated_attribute" ];
+  Node10 [label="Deprecated_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structDeprecated__attribute.html",tooltip=" "];
+  Node11 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" localvariabletable\l_attribute" ];
+  Node11 [label="LocalVariableTable\l_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structLocalVariableTable__attribute.html",tooltip=" "];
+  Node12 -> Node11 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" local_variable_table" ];
+  Node12 [label="local_variable_table_info",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structlocal__variable__table__info.html",tooltip=" "];
+  Node13 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" exceptions_attribute" ];
+  Node13 [label="Exceptions_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structExceptions__attribute.html",tooltip=" "];
+  Node14 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" code_attribute" ];
+  Node14 [label="Code_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structCode__attribute.html",tooltip=" "];
+  Node15 -> Node14 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" exception_table" ];
+  Node15 [label="exception_table_info",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structexception__table__info.html",tooltip=" "];
+  Node2 -> Node14 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" attributes" ];
+}

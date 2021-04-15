@@ -1,0 +1,59 @@
+\hypertarget{classFrameStack}{}\doxysection{Frame\+Stack Class Reference}
+\label{classFrameStack}\index{FrameStack@{FrameStack}}
+
+
+{\ttfamily \#include $<$frame\+\_\+stack.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classFrameStack_a53d65a2ecd217d894c82cb6106d8ad9c}{push}} (\mbox{\hyperlink{classFrame}{Frame}} $\ast$frame)
+\begin{DoxyCompactList}\small\item\em Push frame to the stack. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classFrameStack_a7da31bde9fe2f7cf6a4e2497445223a5}\label{classFrameStack_a7da31bde9fe2f7cf6a4e2497445223a5}} 
+void \mbox{\hyperlink{classFrameStack_a7da31bde9fe2f7cf6a4e2497445223a5}{pop}} ()
+\begin{DoxyCompactList}\small\item\em Pop the top frame of the stack. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classFrameStack_a0e89e1f0c4d8cf007e2095847b2430e2}{is\+Empty}} ()
+\begin{DoxyCompactList}\small\item\em Verify if the frame stack is empty. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A frame stack stores all frames being executed by the J\+VM interpreter. The current context is referenced by the top of the stack.
+
+Everytime a new method is called by the current context, a new frame is created and pushed into the top of the stack. When its execution finishes, the frame will be popped and its return value appended to the operand stack of the new top frame.
+
+When the frame stack is empty, no context is currently being executed, indicating that the program has finished running. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classFrameStack_a0e89e1f0c4d8cf007e2095847b2430e2}\label{classFrameStack_a0e89e1f0c4d8cf007e2095847b2430e2}} 
+\index{FrameStack@{FrameStack}!isEmpty@{isEmpty}}
+\index{isEmpty@{isEmpty}!FrameStack@{FrameStack}}
+\doxysubsubsection{\texorpdfstring{isEmpty()}{isEmpty()}}
+{\footnotesize\ttfamily bool Frame\+Stack\+::is\+Empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Verify if the frame stack is empty. 
+
+\begin{DoxyReturn}{Returns}
+Boolean value indicating wheter the stack is empty (true) or non-\/empty (false). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classFrameStack_a53d65a2ecd217d894c82cb6106d8ad9c}\label{classFrameStack_a53d65a2ecd217d894c82cb6106d8ad9c}} 
+\index{FrameStack@{FrameStack}!push@{push}}
+\index{push@{push}!FrameStack@{FrameStack}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily void Frame\+Stack\+::push (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classFrame}{Frame}} $\ast$}]{frame }\end{DoxyParamCaption})}
+
+
+
+Push frame to the stack. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & a pointer to the frame to be added. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/frame\+\_\+stack.\+hpp\end{DoxyCompactItemize}
