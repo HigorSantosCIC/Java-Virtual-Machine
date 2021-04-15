@@ -28,13 +28,14 @@ int main(int argc, char *argv[])
 
   Frame *main_frame = new Frame(class_file, "main", "([Ljava/lang/String;)V");
 
-  RuntimeDataArea runtime_data_area;
-  runtime_data_area.method_area->addClass(class_name, class_file);
+  RuntimeDataArea *runtime_data_area = new RuntimeDataArea();
+  runtime_data_area->method_area->addClass(class_name, class_file);
 
   // Initialize frame stack with main and (TODO) init (if exists) methods
-  runtime_data_area.frame_stack->push(main_frame);
+  runtime_data_area->frame_stack->push(main_frame);
 
-  Interpreter interpreter();
+  Interpreter interpreter(runtime_data_area);
+  interpreter.run();
 
   // TODO: Fetch-decode-execute cycle
 
