@@ -48,6 +48,11 @@ void Frame::setPcByOffset(int offset)
     pc += offset;
 }
 
+void Frame::setLocalVariable(GenericType *value, int index)
+{
+    local_variables[index] = value;
+}
+
 void Frame::pushValueIntoOperandStack(GenericType *value)
 {
     operand_stack.push(value);
