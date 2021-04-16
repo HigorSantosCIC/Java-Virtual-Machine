@@ -33,6 +33,7 @@ public:
 
     // Setters
     void setPcByOffset(int offset);
+    void setLocalVariable(GenericType *value, int index);
 
 private:
     std::unordered_map<int, GenericType *> local_variables;
