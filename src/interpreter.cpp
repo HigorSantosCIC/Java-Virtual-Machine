@@ -11,10 +11,34 @@ Interpreter::~Interpreter()
 
 void Interpreter::run()
 {
-    u1 instruction = runtime_data_area->fetchInstruction(0);
+    while (!runtime_data_area->frame_stack->isEmpty())
+    {
+        u1 instruction = runtime_data_area->fetchInstruction(0);
 
-    if (instruction == 0x14)
-        ldc2_w();
+        switch (instruction)
+        {
+        case 0x14:
+            ldc2_w();
+            break;
+        case 0x47:
+            dstore_0();
+            break;
+        case 0x48:
+            dstore_1();
+            break;
+        case 0x49:
+            dstore_2();
+            break;
+        case 0x4a:
+            dstore_3();
+            break;
+        case 0xb2:
+            getstatic();
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void Interpreter::ldc2_w()
@@ -58,5 +82,86 @@ void Interpreter::ldc2_w()
     }
 
     current_frame->pushValueIntoOperandStack(value_generic);
-    current_frame->setPcByOffset(2);
+    current_frame->setPcByOffset(3);
+}
+
+void Interpreter::dstore_0()
+{
+    dstore_n(0);
+}
+
+void Interpreter::dstore_1()
+{
+    dstore_n(1);
+}
+
+void Interpreter::dstore_2()
+{
+    dstore_n(2);
+}
+
+void Interpreter::dstore_3()
+{
+    dstore_n(3);
+}
+
+void Interpreter::dstore_n(int index)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic = current_frame->getTopOperand();
+
+    // TODO: Validate if is double
+
+    current_frame->setLocalVariable(value_generic, index);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::getstatic()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    cp_info **constant_pool = current_frame->getConstantPool();
+
+    u1 index_byte1 = runtime_data_area->fetchInstruction(1);
+    u1 index_byte2 = runtime_data_area->fetchInstruction(2);
+
+    u2 index = (index_byte1 << 8) | index_byte2;
+
+    if (constant_pool[index - 1]->tag != CONSTANT_Fieldref)
+    {
+        std::cout << "getstatic instruction is accessing an invalid entry in constant pool." << std::endl;
+        exit(1);
+    }
+
+    std::string utf8_data = runtime_data_area->getNameFromConstantPoolEntry(constant_pool[index - 1]);
+
+    std::string class_name = splitByToken(utf8_data, 0);
+    std::string field_name = splitByToken(utf8_data, 1);
+    std::string field_descriptor = splitByToken(utf8_data, 2);
+
+    if (class_name == "java/lang/System" and field_descriptor == "Ljava/io/PrintStream;")
+    {
+        current_frame->setPcByOffset(3);
+        return;
+    }
+
+    //TODO: Load class from method area
+}
+
+std::string Interpreter::splitByToken(std::string str, int position)
+{
+    std::istringstream iss(str);
+    std::string token;
+
+    int index = 0;
+
+    while (std::getline(iss, token, ','))
+    {
+        if (index == position)
+            return token;
+
+        index++;
+    }
+
+    return str;
 }

@@ -13,6 +13,9 @@ public:
     void initializeFrameStack();
 
     u1 fetchInstruction(u2 pc_offset);
+    
+    // ? Should getNameFromConstnatPoolEntry be moved to cp_info
+    std::string getNameFromConstantPoolEntry(cp_info *constant_pool_entry);
 
     FrameStack *frame_stack;
     MethodArea *method_area;
