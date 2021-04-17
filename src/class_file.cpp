@@ -33,6 +33,19 @@ method_info *ClassFile::searchMethodByNameAndDescriptor(std::string method_name,
     return NULL;
 }
 
+bool ClassFile::fieldExists(std::string field_name)
+{
+    for (int i = 0; i < fields_count; i++)
+    {
+        std::string current_field_name = getNameFromConstantPoolEntry(constant_pool[fields[i]->name_index - 1]);
+
+        if (field_name == current_field_name)
+            return true;
+    }
+
+    return false;
+}
+
 std::string ClassFile::getNameFromConstantPoolEntry(cp_info *constant_pool_entry)
 {
     std::string s = "";

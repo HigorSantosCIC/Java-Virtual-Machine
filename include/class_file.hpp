@@ -33,6 +33,14 @@ typedef struct
   u1 *getCodeByMethod(method_info *method);
 
   /**
+     * @brief Verify if a given field exists in the class file
+     * @param field_name
+     * @return (true) if field exists.
+     * @return (false) if field doesn't exists.
+     */
+  bool fieldExists(std::string field_name);
+
+  /**
      * @brief 
      * 1) Fetch method in class_file;
      * 

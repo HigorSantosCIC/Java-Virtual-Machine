@@ -145,7 +145,12 @@ void Interpreter::getstatic()
         return;
     }
 
-    //TODO: Load class from method area
+    ClassFile *class_file = runtime_data_area->loadClassByName(class_name);
+
+    if (fetchFieldInSuperClasses(field_name, class_file))
+    {
+        //TODO: Load field into operand stack
+    }
 }
 
 std::string Interpreter::splitByToken(std::string str, int position)
@@ -164,4 +169,26 @@ std::string Interpreter::splitByToken(std::string str, int position)
     }
 
     return str;
+}
+
+bool Interpreter::fetchFieldInSuperClasses(std::string field_name, ClassFile *class_file)
+{
+    bool field_found = false;
+
+    while (class_file->super_class != 0 and !field_found)
+    {
+        if (!class_file->fieldExists(field_name))
+        {
+            std::string super_class_name = class_file->getNameFromConstantPoolEntry(class_file->constant_pool[class_file->super_class - 1]);
+            std::string super_class_name = splitByToken(super_class_name, 0);
+
+            class_file = runtime_data_area->loadClassByName(super_class_name);
+        }
+        else
+        {
+            field_found = true;
+        }
+    }
+
+    return field_found;
 }

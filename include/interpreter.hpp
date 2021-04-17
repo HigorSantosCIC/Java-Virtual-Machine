@@ -32,6 +32,9 @@ private:
 
     // ? Where to save splitByToken method? Consider creater a StringUtils namespace.
     std::string splitByToken(std::string str, int position);
+
+    // ! Review and test
+    bool fetchFieldInSuperClasses(std::string field_name, ClassFile *class_file);
 };
 
 #endif
