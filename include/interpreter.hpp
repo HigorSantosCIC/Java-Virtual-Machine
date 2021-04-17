@@ -7,6 +7,7 @@
 #include <math.h>
 #include <sstream>
 #include <string>
+#include <limits>
 
 class Interpreter
 {
@@ -43,8 +44,34 @@ private:
      * @brief (0x63): Add two doubles from operand stack.
      */
     void dadd();
+    /**
+     * @brief (0x67): Subtract two doubles from operand stack.
+     */
+    void dsub();
+    /**
+     * @brief (0x6b): Multiply two doubles from operand stack.
+     */
+    void dmul();
+    /**
+     * @brief (0x6f): Divide two doubles from operand stack.
+     */
+    void ddiv();
+    /**
+     * @brief (0x73): Negate double from operand stack.
+     */
+    void dneg();
+    /**
+     * @brief (0x73): Remainder between two doubles division.
+     */
+    void drem();
 
     void getstatic();
+
+    void invokevirtual();
+
+    void returnInstruction ();
+
+    void printGenericTypeByDescriptor(std::string method_descriptor);
 
     // ? Where to save splitByToken method? Consider creater a StringUtils namespace.
     std::string splitByToken(std::string str, int position);

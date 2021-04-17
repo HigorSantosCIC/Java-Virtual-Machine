@@ -48,9 +48,31 @@ void Interpreter::run()
         case 0x63:
             dadd();
             break;
+        case 0x67:
+            dsub();
+            break;
+        case 0x6b:
+            dmul();
+            break;
+        case 0x6f:
+            ddiv();
+            break;
+        case 0x73:
+            drem();
+            break;
+        case 0x77:
+            dneg();
+            break;
+        case (0xb1):
+            returnInstruction();
+            break;
         case 0xb2:
             getstatic();
             break;
+        case (0xb6):
+            invokevirtual();
+            break;
+
         default:
             return;
             break;
@@ -124,6 +146,7 @@ void Interpreter::dstore_3()
 
 void Interpreter::dstore_n(int index)
 {
+
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
@@ -156,6 +179,7 @@ void Interpreter::dload_3()
 
 void Interpreter::dadd()
 {
+
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
     GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
@@ -165,20 +189,89 @@ void Interpreter::dadd()
     result->data.double_value = value_generic_1->data.double_value + value_generic_2->data.double_value;
     current_frame->pushValueIntoOperandStack(result);
 
-    std::cout << "dadd: " << current_frame->getTopOperand()->data.double_value << std::endl
-              << std::endl;
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dsub()
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
+
+    GenericType *result = (GenericType *)malloc(sizeof(GenericType));
+
+    result->data.double_value = value_generic_2->data.double_value - value_generic_1->data.double_value;
+    current_frame->pushValueIntoOperandStack(result);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dmul()
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
+
+    GenericType *result = (GenericType *)malloc(sizeof(GenericType));
+
+    result->data.double_value = value_generic_1->data.double_value * value_generic_2->data.double_value;
+    current_frame->pushValueIntoOperandStack(result);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::ddiv()
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
+
+    GenericType *result = (GenericType *)malloc(sizeof(GenericType));
+
+    result->data.double_value = value_generic_2->data.double_value / value_generic_1->data.double_value;
+    current_frame->pushValueIntoOperandStack(result);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dneg()
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
+
+    GenericType *result = (GenericType *)malloc(sizeof(GenericType));
+
+    result->data.double_value = -value_generic_1->data.double_value;
+    current_frame->pushValueIntoOperandStack(result);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::drem()
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
+
+    GenericType *result = (GenericType *)malloc(sizeof(GenericType));
+
+    result->data.double_value = value_generic_1->data.double_value - ((u4)value_generic_2->data.double_value / (u4)value_generic_1->data.double_value) * value_generic_2->data.double_value;
+    current_frame->pushValueIntoOperandStack(result);
 
     current_frame->setPcByOffset(1);
 }
 
 void Interpreter::dload_n(int index)
 {
+
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
     GenericType *value = current_frame->getLocalVariable(index);
-
-    std::cout << "dload_" << index << ": " << value->data.double_value << std::endl
-              << std::endl;
 
     current_frame->pushValueIntoOperandStack(value);
 
@@ -187,6 +280,7 @@ void Interpreter::dload_n(int index)
 
 void Interpreter::getstatic()
 {
+
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
     cp_info **constant_pool = current_frame->getConstantPool();
 
@@ -217,10 +311,12 @@ void Interpreter::getstatic()
 
     ClassFile *class_file = runtime_data_area->loadClassByName(class_name);
 
-    if (fetchFieldInSuperClasses(field_name, class_file))
+    if (!fetchFieldInSuperClasses(field_name, class_file))
     {
-        //TODO: Load field into operand stack
+        std::cout << "NoSuchFieldError" << std::endl;
     }
+
+    //TODO: Load field into operand stack
 }
 
 std::string Interpreter::splitByToken(std::string str, int position)
@@ -239,6 +335,99 @@ std::string Interpreter::splitByToken(std::string str, int position)
     }
 
     return str;
+}
+
+void Interpreter::invokevirtual()
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    cp_info **constant_pool = current_frame->getConstantPool();
+
+    u1 index_byte1 = runtime_data_area->fetchInstruction(1);
+    u1 index_byte2 = runtime_data_area->fetchInstruction(2);
+
+    u2 method_index = (index_byte1 << 8) | index_byte2;
+
+    if (constant_pool[method_index - 1]->tag != CONSTANT_Methodref)
+    {
+        std::cout << "Index must be a method reference!" << std::endl;
+        exit(1);
+    }
+
+    std::string method_info = runtime_data_area->getNameFromConstantPoolEntry(constant_pool[method_index - 1]);
+
+    std::string class_name = splitByToken(method_info, 0);
+    std::string method_name = splitByToken(method_info, 1);
+    std::string method_descriptor = splitByToken(method_info, 2);
+
+    if (class_name.compare("java/io/PrintStream") == 0)
+    {
+        if (method_name.compare("print") == 0 or method_name.compare("println") == 0)
+        {
+            printGenericTypeByDescriptor(method_descriptor);
+
+            if (method_name.compare("println") == 0)
+                std::cout << std::endl;
+        }
+    }
+
+    //TODO: Implement other invokevirtual use cases
+
+    current_frame->setPcByOffset(3);
+}
+
+void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
+{
+    GenericType *value = runtime_data_area->frame_stack->getTop()->popValueFromOperandStack();
+
+    if (descriptor.compare("(B)V") == 0)
+    {
+        std::cout << value->data.byte_value;
+    }
+    else if (descriptor.compare("(C)V") == 0)
+    {
+
+        std::cout << value->data.char_value;
+    }
+    else if (descriptor.compare("(D)V") == 0)
+    {
+        std::cout.precision(std::numeric_limits<double>::max_digits10);
+        std::cout << value->data.double_value;
+    }
+    else if (descriptor.compare("(F)V") == 0)
+    {
+        std::cout << value->data.float_value;
+    }
+    else if (descriptor.compare("(I)V") == 0)
+    {
+        std::cout << value->data.int_value;
+    }
+
+    else if (descriptor.compare("(J)V") == 0)
+    {
+        std::cout << value->data.long_value;
+    }
+    else if (descriptor.compare("(Ljava/lang/String;)V") == 0)
+    {
+        std::cout << value->data.string_value;
+    }
+    else if (descriptor.compare("(S)V") == 0)
+    {
+        std::cout << value->data.short_value;
+    }
+    else if (descriptor.compare("(Z)V") == 0)
+    {
+        std::cout << value->data.boolean_value;
+    }
+    else
+    {
+        std::cout << "Unsupported type";
+    }
+}
+
+void Interpreter::returnInstruction()
+{
+    runtime_data_area->frame_stack->pop();
 }
 
 bool Interpreter::fetchFieldInSuperClasses(std::string field_name, ClassFile *class_file)

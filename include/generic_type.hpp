@@ -13,6 +13,7 @@ typedef struct
         int32_t int_value;
         int64_t long_value;
         int16_t short_value;
+        std::string string_value;
     } data;
 } GenericType;
 
