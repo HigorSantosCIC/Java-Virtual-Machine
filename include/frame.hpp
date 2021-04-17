@@ -6,19 +6,21 @@
 #include <stack>
 #include <unordered_map>
 #include "generic_type.hpp"
+#include <vector>
 
 /**
  * A frame is a data structure that contains information about the methods executed by the interpreter. All frames are stack in a FrameStack.
  
  */
+
 class Frame
 {
 public:
     /**
      * @brief Creates a frame.
-     * @param constant_pool reference to the constant pool of the frame method's class.
      */
     Frame(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor);
+    Frame(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor, std::vector<GenericType *> arguments);
     ~Frame();
 
     void pushValueIntoOperandStack(GenericType *value);

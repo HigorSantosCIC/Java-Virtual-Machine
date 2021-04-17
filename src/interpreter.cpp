@@ -18,6 +18,27 @@ void Interpreter::run()
 
         switch (instruction)
         {
+        case 0x02:
+            iconst_m1();
+            break;
+        case 0x03:
+            iconst_0();
+            break;
+        case 0x04:
+            iconst_1();
+            break;
+        case 0x05:
+            iconst_2();
+            break;
+        case 0x06:
+            iconst_3();
+            break;
+        case 0x07:
+            iconst_4();
+            break;
+        case 0x08:
+            iconst_5();
+            break;
         case 0x14:
             ldc2_w();
             break;
@@ -32,6 +53,18 @@ void Interpreter::run()
             break;
         case (0x29):
             dload_3();
+            break;
+        case (0x1a):
+            iload_0();
+            break;
+        case (0x1b):
+            iload_1();
+            break;
+        case (0x1c):
+            iload_2();
+            break;
+        case (0x1d):
+            iload_3();
             break;
         case 0x47:
             dstore_0();
@@ -63,6 +96,12 @@ void Interpreter::run()
         case 0x77:
             dneg();
             break;
+        case (0xaa):
+            tableswitch();
+            break;
+        case (0xac):
+            ireturn();
+            break;
         case (0xb1):
             returnInstruction();
             break;
@@ -72,12 +111,267 @@ void Interpreter::run()
         case (0xb6):
             invokevirtual();
             break;
-
+        case (0xb8):
+            invokestatic();
+            break;
         default:
             return;
             break;
         }
     }
+}
+
+void Interpreter::tableswitch()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 padding_bytes = 4 - (current_frame->getPc() + 1) % 4;
+
+    if (padding_bytes == 4)
+        padding_bytes = 0;
+
+    u1 default_byte1 = runtime_data_area->fetchInstruction(padding_bytes + 1);
+    u1 default_byte2 = runtime_data_area->fetchInstruction(padding_bytes + 2);
+    u1 default_byte3 = runtime_data_area->fetchInstruction(padding_bytes + 3);
+    u1 default_byte4 = runtime_data_area->fetchInstruction(padding_bytes + 4);
+
+    u1 low_byte1 = runtime_data_area->fetchInstruction(padding_bytes + 5);
+    u1 low_byte2 = runtime_data_area->fetchInstruction(padding_bytes + 6);
+    u1 low_byte3 = runtime_data_area->fetchInstruction(padding_bytes + 7);
+    u1 low_byte4 = runtime_data_area->fetchInstruction(padding_bytes + 8);
+
+    u1 high_byte1 = runtime_data_area->fetchInstruction(padding_bytes + 9);
+    u1 high_byte2 = runtime_data_area->fetchInstruction(padding_bytes + 10);
+    u1 high_byte3 = runtime_data_area->fetchInstruction(padding_bytes + 11);
+    u1 high_byte4 = runtime_data_area->fetchInstruction(padding_bytes + 12);
+
+    int32_t default_bytes = (default_byte1 << 24) | (default_byte2 << 16) | (default_byte3 << 8) | default_byte4;
+    int32_t low_bytes = (low_byte1 << 24) | (low_byte2 << 16) | (low_byte3 << 8) | low_byte4;
+    int32_t high_bytes = (high_byte1 << 24) | (high_byte2 << 16) | (high_byte3 << 8) | high_byte4;
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    int32_t index = index_generic->data.int_value;
+
+    int32_t jump_offsets = high_bytes - low_bytes + 1;
+
+    padding_bytes += 12;
+
+    bool flag_index_found = false;
+
+    for (int i = 0; i < jump_offsets; i++)
+    {
+        if (index == low_bytes)
+        {
+            flag_index_found = true;
+
+            u1 jump_byte_1 = runtime_data_area->fetchInstruction(padding_bytes + 1);
+            u1 jump_byte_2 = runtime_data_area->fetchInstruction(padding_bytes + 2);
+            u1 jump_byte_3 = runtime_data_area->fetchInstruction(padding_bytes + 3);
+            u1 jump_byte_4 = runtime_data_area->fetchInstruction(padding_bytes + 4);
+
+            int32_t jump_bytes = (jump_byte_1 << 24) | (jump_byte_2 << 16) | (jump_byte_3 << 8) | jump_byte_4;
+
+            current_frame->setPcByOffset(jump_bytes);
+
+            break;
+        }
+        low_bytes++;
+        padding_bytes += 4;
+    }
+
+    if (!flag_index_found)
+        current_frame->setPcByOffset(default_bytes);
+}
+
+void Interpreter::invokestatic()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    cp_info **constant_pool = current_frame->getConstantPool();
+
+    u1 index_byte1 = runtime_data_area->fetchInstruction(1);
+    u1 index_byte2 = runtime_data_area->fetchInstruction(2);
+
+    u2 index = (index_byte1 << 8) | index_byte2;
+
+    cp_info *method_ref = constant_pool[index - 1];
+
+    if (method_ref->tag != CONSTANT_Methodref)
+    {
+        std::cout << "Index must reference a method." << std::endl;
+    }
+
+    std::string utf8_data = runtime_data_area->getNameFromConstantPoolEntry(method_ref);
+
+    std::string class_name = splitByToken(utf8_data, 0);
+    std::string method_name = splitByToken(utf8_data, 1);
+    std::string method_descriptor = splitByToken(utf8_data, 2);
+
+    if (class_name.compare("java/lang/Object") == 0 and method_name.compare("registerNatives") == 0)
+    {
+        current_frame->setPcByOffset(3);
+        return;
+    }
+
+    if (class_name.find("java/") == 0)
+    {
+        std::cout << "Invoking static method from java/* class is not allowed." << std::endl;
+    }
+
+    // Number of arguments of invoked method's operand stack and local variable array
+    u2 nargs = (u2)getNumberOfArgumentsByDescriptor(method_descriptor);
+
+    std::vector<GenericType *> method_arguments;
+
+    for (int i = 0; i < nargs; i++)
+    {
+        GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+        method_arguments.push_back(value_generic);
+    }
+
+    std::reverse(method_arguments.begin(), method_arguments.end());
+
+    ClassFile *class_file = runtime_data_area->loadClassByName(class_name);
+
+    Frame *invoked_method_frame = new Frame(class_file, method_name, method_descriptor, method_arguments);
+
+    // TODO: Resume execution in <clinit> method, if exists.
+
+    runtime_data_area->frame_stack->push(invoked_method_frame);
+
+    current_frame->setPcByOffset(3);
+}
+
+int Interpreter::getNumberOfArgumentsByDescriptor(std::string method_descriptor)
+{
+    int args_count = 0;
+
+    for (long unsigned int i = 0; i < method_descriptor.length(); i++)
+    {
+        if (method_descriptor[i] == '(')
+            continue;
+
+        if (method_descriptor[i] == ')')
+            break;
+
+        char current_argument_type = method_descriptor[i];
+
+        if (current_argument_type == 'D' || current_argument_type == 'J')
+        {
+            // ? Should double and long values include a padding? If so, increment args_count by 2.
+            args_count += 1;
+        }
+        else if (current_argument_type == 'L')
+        {
+            args_count++;
+
+            while (method_descriptor[++i] != ';')
+            {
+                i++;
+            }
+        }
+        else if (current_argument_type == '[')
+        {
+            args_count++;
+
+            while (method_descriptor[i] == '[')
+            {
+                i++;
+            }
+
+            if (method_descriptor[i] == 'L')
+            {
+                while (method_descriptor[i] != ';')
+                {
+                    i++;
+                }
+            }
+        }
+        else
+        {
+            args_count++;
+        }
+    }
+
+    return args_count;
+}
+
+void Interpreter::iload_n(int value)
+{
+    GenericType *value_generic = runtime_data_area->frame_stack->getTop()->getLocalVariable(value);
+
+    // TODO: Verify if value_generic is an integer.
+
+    runtime_data_area->frame_stack->getTop()->pushValueIntoOperandStack(value_generic);
+    runtime_data_area->frame_stack->getTop()->setPcByOffset(1);
+}
+
+void Interpreter::iload_0()
+{
+    iload_n(0);
+}
+
+void Interpreter::iload_1()
+{
+    iload_n(1);
+}
+
+void Interpreter::iload_2()
+{
+    iload_n(2);
+}
+
+void Interpreter::iload_3()
+{
+    iload_n(3);
+}
+
+void Interpreter::iconst_n(int value)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    value_generic->data.int_value = value;
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::iconst_m1()
+{
+    iconst_n(-1);
+}
+
+void Interpreter::iconst_0()
+{
+    iconst_n(0);
+}
+
+void Interpreter::iconst_1()
+{
+    iconst_n(1);
+}
+
+void Interpreter::iconst_2()
+{
+    iconst_n(2);
+}
+
+void Interpreter::iconst_3()
+{
+    iconst_n(3);
+}
+
+void Interpreter::iconst_4()
+{
+    iconst_n(4);
+}
+
+void Interpreter::iconst_5()
+{
+    iconst_n(5);
 }
 
 void Interpreter::ldc2_w()
@@ -117,7 +411,7 @@ void Interpreter::ldc2_w()
     }
     else
     {
-        // Invalid tag
+        // TODO: Throw exception.
     }
 
     current_frame->pushValueIntoOperandStack(value_generic);
@@ -428,6 +722,18 @@ void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
 void Interpreter::returnInstruction()
 {
     runtime_data_area->frame_stack->pop();
+}
+
+void Interpreter::ireturn()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    runtime_data_area->frame_stack->pop();
+
+    Frame *new_current_frame = runtime_data_area->frame_stack->getTop();
+    new_current_frame->pushValueIntoOperandStack(value_generic);
 }
 
 bool Interpreter::fetchFieldInSuperClasses(std::string field_name, ClassFile *class_file)

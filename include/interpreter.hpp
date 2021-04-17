@@ -8,6 +8,8 @@
 #include <sstream>
 #include <string>
 #include <limits>
+#include <vector>
+#include <algorithm>
 
 class Interpreter
 {
@@ -27,6 +29,23 @@ private:
      * @brief (0x14): Push long or double from run-time constant pool.
      */
     void ldc2_w();
+
+    void tableswitch();
+
+    void iload_n(int value);
+    void iload_0();
+    void iload_1();
+    void iload_2();
+    void iload_3();
+
+    void iconst_n(int value);
+    void iconst_m1();
+    void iconst_0();
+    void iconst_1();
+    void iconst_2();
+    void iconst_3();
+    void iconst_4();
+    void iconst_5();
 
     void dstore_0();
     void dstore_1();
@@ -68,10 +87,22 @@ private:
     void getstatic();
 
     void invokevirtual();
+    void invokestatic();
 
-    void returnInstruction ();
+    void returnInstruction();
+    void ireturn();
 
     void printGenericTypeByDescriptor(std::string method_descriptor);
+
+    /**
+     * @brief Count the number of arguments in a method descriptor.
+     * 
+     * Credits: https://github.com/ArthurEmidio/jvm
+     * 
+     * @param method_descriptor String containing the method descriptor to be analyzed.
+     * @return (int) number of arguments in method descriptor.
+     */
+    int getNumberOfArgumentsByDescriptor(std::string method_descriptor);
 
     // ? Where to save splitByToken method? Consider creater a StringUtils namespace.
     std::string splitByToken(std::string str, int position);
