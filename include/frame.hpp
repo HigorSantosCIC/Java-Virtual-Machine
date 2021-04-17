@@ -22,6 +22,7 @@ public:
     ~Frame();
 
     void pushValueIntoOperandStack(GenericType *value);
+    GenericType *popValueFromOperandStack();
 
     // Getters
     u4 getPc();
@@ -30,6 +31,7 @@ public:
     std::string getMethodDescriptor();
     cp_info **getConstantPool();
     GenericType *getTopOperand();
+    GenericType *getLocalVariable(int index);
 
     // Setters
     void setPcByOffset(int offset);

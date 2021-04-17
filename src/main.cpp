@@ -37,8 +37,6 @@ int main(int argc, char *argv[])
   Interpreter interpreter(runtime_data_area);
   interpreter.run();
 
-  // TODO: Fetch-decode-execute cycle
-
   ClassViewer class_viewer(class_file);
   class_viewer.printClassFile();
 

@@ -3,6 +3,7 @@
 Interpreter::Interpreter(RuntimeDataArea *p_runtime_data_area)
 {
     runtime_data_area = p_runtime_data_area;
+    isInstructionWide = false;
 }
 
 Interpreter::~Interpreter()
@@ -20,6 +21,18 @@ void Interpreter::run()
         case 0x14:
             ldc2_w();
             break;
+        case (0x26):
+            dload_0();
+            break;
+        case (0x27):
+            dload_1();
+            break;
+        case (0x28):
+            dload_2();
+            break;
+        case (0x29):
+            dload_3();
+            break;
         case 0x47:
             dstore_0();
             break;
@@ -32,10 +45,14 @@ void Interpreter::run()
         case 0x4a:
             dstore_3();
             break;
+        case 0x63:
+            dadd();
+            break;
         case 0xb2:
             getstatic();
             break;
         default:
+            return;
             break;
         }
     }
@@ -108,11 +125,62 @@ void Interpreter::dstore_3()
 void Interpreter::dstore_n(int index)
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
-    GenericType *value_generic = current_frame->getTopOperand();
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
 
     // TODO: Validate if is double
 
     current_frame->setLocalVariable(value_generic, index);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dload_0()
+{
+    dload_n(0);
+}
+
+void Interpreter::dload_1()
+{
+    dload_n(1);
+}
+
+void Interpreter::dload_2()
+{
+    dload_n(2);
+}
+
+void Interpreter::dload_3()
+{
+    dload_n(3);
+}
+
+void Interpreter::dadd()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic_1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
+
+    GenericType *result = (GenericType *)malloc(sizeof(GenericType));
+
+    result->data.double_value = value_generic_1->data.double_value + value_generic_2->data.double_value;
+    current_frame->pushValueIntoOperandStack(result);
+
+    std::cout << "dadd: " << current_frame->getTopOperand()->data.double_value << std::endl
+              << std::endl;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dload_n(int index)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value = current_frame->getLocalVariable(index);
+
+    std::cout << "dload_" << index << ": " << value->data.double_value << std::endl
+              << std::endl;
+
+    current_frame->pushValueIntoOperandStack(value);
 
     current_frame->setPcByOffset(1);
 }
@@ -127,6 +195,7 @@ void Interpreter::getstatic()
 
     u2 index = (index_byte1 << 8) | index_byte2;
 
+    // Index must point to a fieldref in constant pool
     if (constant_pool[index - 1]->tag != CONSTANT_Fieldref)
     {
         std::cout << "getstatic instruction is accessing an invalid entry in constant pool." << std::endl;
@@ -139,6 +208,7 @@ void Interpreter::getstatic()
     std::string field_name = splitByToken(utf8_data, 1);
     std::string field_descriptor = splitByToken(utf8_data, 2);
 
+    // java/io/PrintStream fields won't be loaded into operand stack
     if (class_name == "java/lang/System" and field_descriptor == "Ljava/io/PrintStream;")
     {
         current_frame->setPcByOffset(3);
@@ -180,7 +250,7 @@ bool Interpreter::fetchFieldInSuperClasses(std::string field_name, ClassFile *cl
         if (!class_file->fieldExists(field_name))
         {
             std::string super_class_name = class_file->getNameFromConstantPoolEntry(class_file->constant_pool[class_file->super_class - 1]);
-            std::string super_class_name = splitByToken(super_class_name, 0);
+            super_class_name = splitByToken(super_class_name, 0);
 
             class_file = runtime_data_area->loadClassByName(super_class_name);
         }

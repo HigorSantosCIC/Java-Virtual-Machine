@@ -43,6 +43,11 @@ GenericType *Frame::getTopOperand()
     return operand_stack.top();
 }
 
+GenericType *Frame::getLocalVariable(int index)
+{
+    return local_variables[index];
+}
+
 void Frame::setPcByOffset(int offset)
 {
     pc += offset;
@@ -56,4 +61,12 @@ void Frame::setLocalVariable(GenericType *value, int index)
 void Frame::pushValueIntoOperandStack(GenericType *value)
 {
     operand_stack.push(value);
+}
+
+GenericType *Frame::popValueFromOperandStack()
+{
+    GenericType *value = operand_stack.top();
+    operand_stack.pop();
+
+    return value;
 }
