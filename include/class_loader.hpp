@@ -27,6 +27,7 @@ private:
   u1 readU1();
   u2 readU2();
   u4 readU4();
+  
   CONSTANT_Class_info *readConstantClassInfo();
   CONSTANT_Fieldref_info *readConstantFieldrefInfo();
   CONSTANT_Methodref_info *readConstantMethodrefInfo();

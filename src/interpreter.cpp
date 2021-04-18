@@ -39,8 +39,26 @@ void Interpreter::run()
         case 0x08:
             iconst_5();
             break;
+        case 0x10:
+            bipush();
+            break;
+        case 0x12:
+            ldc();
+            break;
         case 0x14:
             ldc2_w();
+            break;
+        case (0x2a):
+            aload_0();
+            break;
+        case (0x2b):
+            aload_1();
+            break;
+        case (0x2c):
+            aload_2();
+            break;
+        case (0x2d):
+            aload_3();
             break;
         case (0x26):
             dload_0();
@@ -54,6 +72,9 @@ void Interpreter::run()
         case (0x29):
             dload_3();
             break;
+        case (0x32):
+            aaload();
+            break;
         case (0x1a):
             iload_0();
             break;
@@ -66,6 +87,18 @@ void Interpreter::run()
         case (0x1d):
             iload_3();
             break;
+        case (0x4b):
+            astore_0();
+            break;
+        case (0x4c):
+            astore_1();
+            break;
+        case (0x4d):
+            astore_2();
+            break;
+        case (0x4e):
+            astore_3();
+            break;
         case 0x47:
             dstore_0();
             break;
@@ -77,6 +110,9 @@ void Interpreter::run()
             break;
         case 0x4a:
             dstore_3();
+            break;
+        case (0x53):
+            aastore();
             break;
         case 0x63:
             dadd();
@@ -114,11 +150,69 @@ void Interpreter::run()
         case (0xb8):
             invokestatic();
             break;
-        default:
-            return;
+        case (0xc5):
+            multianewarray();
             break;
+        default:
+            std::cout << "Exiting interpreter on opcode " << unsigned(instruction) << std::endl;
+            return;
         }
     }
+}
+
+void Interpreter::aastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if value is an array reference
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if index is an integer
+
+    GenericType *array_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if array is an array reference
+
+    if (array_value_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_value_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::ldc()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    cp_info **constant_pool = current_frame->getConstantPool();
+
+    u1 index = runtime_data_area->fetchInstruction(1);
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    if (constant_pool[index - 1]->tag == CONSTANT_Float)
+    {
+        u4 bytes = constant_pool[index - 1]->info.float_info->bytes;
+
+        float float_value = *(float *)&bytes;
+        value_generic->data.float_value = float_value;
+    }
+    else if (constant_pool[index - 1]->tag == CONSTANT_Integer)
+    {
+        value_generic->data.int_value = (int32_t)constant_pool[index - 1]->info.integer_info->bytes;
+    }
+    else if (constant_pool[index - 1]->tag == CONSTANT_String)
+    {
+        std::string string_value = runtime_data_area->getNameFromConstantPoolEntry(constant_pool[index - 1]);
+
+        value_generic->data.string_value = new std::string(string_value);
+    }
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(2);
 }
 
 void Interpreter::tableswitch()
@@ -451,6 +545,61 @@ void Interpreter::dstore_n(int index)
     current_frame->setPcByOffset(1);
 }
 
+void Interpreter::astore_0()
+{
+    astore_n(0);
+}
+
+void Interpreter::astore_1()
+{
+    astore_n(1);
+}
+
+void Interpreter::astore_2()
+{
+    astore_n(2);
+}
+
+void Interpreter::astore_3()
+{
+    astore_n(3);
+}
+
+void Interpreter::astore_n(int index)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if is reference
+
+    current_frame->setLocalVariable(value_generic, index);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::aaload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *int_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if int_value_generic is int
+
+    GenericType *array_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if array_value_generic is array*
+
+    if (array_value_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+    }
+
+    // TODO: Validate other properties and throw associated exceptions
+
+    // Push array element at index referenced by int_value_generic into operand stack
+    current_frame->pushValueIntoOperandStack(array_value_generic->data.array_value->data[int_value_generic->data.int_value]);
+
+    current_frame->setPcByOffset(1);
+}
+
 void Interpreter::dload_0()
 {
     dload_n(0);
@@ -469,6 +618,50 @@ void Interpreter::dload_2()
 void Interpreter::dload_3()
 {
     dload_n(3);
+}
+
+void Interpreter::dload_n(int index)
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::aload_0()
+{
+    aload_n(0);
+}
+
+void Interpreter::aload_1()
+{
+    aload_n(1);
+}
+
+void Interpreter::aload_2()
+{
+    aload_n(2);
+}
+
+void Interpreter::aload_3()
+{
+    aload_n(3);
+}
+
+void Interpreter::aload_n(int index)
+{
+
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value);
+
+    current_frame->setPcByOffset(1);
 }
 
 void Interpreter::dadd()
@@ -556,18 +749,6 @@ void Interpreter::drem()
 
     result->data.double_value = value_generic_1->data.double_value - ((u4)value_generic_2->data.double_value / (u4)value_generic_1->data.double_value) * value_generic_2->data.double_value;
     current_frame->pushValueIntoOperandStack(result);
-
-    current_frame->setPcByOffset(1);
-}
-
-void Interpreter::dload_n(int index)
-{
-
-    Frame *current_frame = runtime_data_area->frame_stack->getTop();
-
-    GenericType *value = current_frame->getLocalVariable(index);
-
-    current_frame->pushValueIntoOperandStack(value);
 
     current_frame->setPcByOffset(1);
 }
@@ -670,6 +851,112 @@ void Interpreter::invokevirtual()
     current_frame->setPcByOffset(3);
 }
 
+void Interpreter::bipush()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte = runtime_data_area->fetchInstruction(1);
+
+    int32_t extended_byte = (int32_t) signed(byte);
+
+    GenericType *int_generic = (GenericType *)malloc(sizeof(GenericType));
+    int_generic->data.int_value = extended_byte;
+
+    current_frame->pushValueIntoOperandStack(int_generic);
+
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::multianewarray()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    cp_info **constant_pool = current_frame->getConstantPool();
+
+    u1 index_byte1 = runtime_data_area->fetchInstruction(1);
+    u1 index_byte2 = runtime_data_area->fetchInstruction(2);
+    u1 dimensions = (u4)runtime_data_area->fetchInstruction(3);
+
+    u2 index = (index_byte1 << 8) | index_byte2;
+
+    if (constant_pool[index - 1]->tag != CONSTANT_Class)
+    {
+        std::cout << "Index must reference a class in constant pool." << std::endl;
+        exit(1);
+    }
+
+    std::string utf8_data = runtime_data_area->getNameFromConstantPoolEntry(constant_pool[index - 1]);
+    std::string class_name = splitByToken(utf8_data, 0);
+
+    char multianewarrayType = getMultianewarrayTypeByClassName(class_name);
+
+    std::vector<int32_t> dimension_array;
+
+    for (int i = 0; i < dimensions; i++)
+    {
+        GenericType *value_generic = current_frame->popValueFromOperandStack();
+        dimension_array.push_back(value_generic->data.int_value);
+    }
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+    Array *array = buildMultianewarray(dimensions - 1, multianewarrayType, dimension_array);
+
+    value_generic->data.array_value = array;
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
+    current_frame->setPcByOffset(4);
+}
+
+Array *Interpreter::buildMultianewarray(int index, char type, std::vector<int> dimension_array)
+{
+    Array *array = new Array();
+    array->data = std::vector<GenericType *>(dimension_array[index]);
+
+    // End of recursion
+    if (index == 0)
+    {
+        for (int i = 0; i < dimension_array[index]; i++)
+        {
+            GenericType *int_value_generic = (GenericType *)malloc(sizeof(GenericType));
+            int_value_generic->data.int_value = 0;
+
+            // TODO: Validate type
+            array->data.at(i) = int_value_generic;
+        }
+
+        return array;
+    }
+
+    for (int i = 0; i < dimension_array[index]; i++)
+    {
+        GenericType *array_value_generic = (GenericType *)malloc(sizeof(GenericType));
+        array_value_generic->data.array_value = buildMultianewarray(index - 1, type, dimension_array);
+
+        array->data.at(i) = array_value_generic;
+    }
+
+    return array;
+}
+
+char Interpreter::getMultianewarrayTypeByClassName(std::string class_name)
+{
+    int i = 0;
+
+    // Skip all '[' in class name
+    while (class_name[i] == '[')
+        i++;
+
+    char type = class_name[i];
+
+    if (type == 'L' and class_name.find("java/lang/String") == std::string::npos)
+    {
+        // Remove ']', ')' and ';' from class name,
+        runtime_data_area->loadClassByName(class_name.substr(i + 1, class_name.size() - i - 2));
+    }
+
+    return type;
+}
+
 void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
 {
     GenericType *value = runtime_data_area->frame_stack->getTop()->popValueFromOperandStack();
@@ -703,7 +990,7 @@ void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
     }
     else if (descriptor.compare("(Ljava/lang/String;)V") == 0)
     {
-        std::cout << value->data.string_value;
+        std::cout << *value->data.string_value;
     }
     else if (descriptor.compare("(S)V") == 0)
     {

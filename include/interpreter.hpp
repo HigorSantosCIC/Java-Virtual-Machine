@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <runtime_data_area.hpp>
 #include <generic_type.hpp>
+#include "array.hpp"
 #include <math.h>
 #include <sstream>
 #include <string>
@@ -24,6 +25,8 @@ private:
 
     // Indicates if the next instruction to be executed is wide. This affects the execution flow of the instruction.
     bool isInstructionWide;
+
+    void ldc();
 
     /**
      * @brief (0x14): Push long or double from run-time constant pool.
@@ -46,6 +49,22 @@ private:
     void iconst_3();
     void iconst_4();
     void iconst_5();
+
+    void astore_0();
+    void astore_1();
+    void astore_2();
+    void astore_3();
+    void astore_n(int index);
+
+    void aastore();
+
+    void aload_0();
+    void aload_1();
+    void aload_2();
+    void aload_3();
+    void aload_n(int index);
+
+    void aaload();
 
     void dstore_0();
     void dstore_1();
@@ -84,7 +103,11 @@ private:
      */
     void drem();
 
+    void bipush();
+
     void getstatic();
+
+    void multianewarray();
 
     void invokevirtual();
     void invokestatic();
@@ -94,6 +117,20 @@ private:
 
     void printGenericTypeByDescriptor(std::string method_descriptor);
 
+    /**
+     * @brief (0xc5): Recursively build a multianewarray.
+     * 
+     * If index > 0, all Array elements will be a reference to a subarray.
+     * 
+     * If index = 0, all Array elements will be initialized with value 0.
+     
+     * @param dimension_array A vector that counts dimensions of each multianewarray level.
+     * @param index Index that references a position in dimension_array, indicating dimension count of current Array
+     * @param type type of data of the final Array.
+     */
+    Array *buildMultianewarray(int index, char type, std::vector<int> dimension_array);
+
+    char getMultianewarrayTypeByClassName(std::string class_name);
     /**
      * @brief Count the number of arguments in a method descriptor.
      * 
