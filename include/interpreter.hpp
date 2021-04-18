@@ -35,11 +35,14 @@ private:
 
     void tableswitch();
 
+    void iload();
     void iload_n(int value);
     void iload_0();
     void iload_1();
     void iload_2();
     void iload_3();
+
+    void istore();
 
     void iconst_n(int value);
     void iconst_m1();
@@ -50,13 +53,17 @@ private:
     void iconst_4();
     void iconst_5();
 
+    void fconst_0();
+    void fconst_1();
+    void fconst_2();
+    void fconst_n(int value);
+
+    void astore();
     void astore_0();
     void astore_1();
     void astore_2();
     void astore_3();
     void astore_n(int index);
-
-    void aastore();
 
     void aload_0();
     void aload_1();
@@ -103,11 +110,56 @@ private:
      */
     void drem();
 
+    void dup();
+
+    void iinc();
+
+    /**
+     * @brief (0x4f): Store into integer array.
+     */
+    void iastore();
+    /**
+     * @brief (0x50): Store into long array.
+     */
+    void lastore();
+    /**
+     * @brief (0x51): Store into float array.
+     */
+    void fastore();
+    /**
+     * @brief (0x52): Store into double array.
+     */
+    void dastore();
+    /**
+     * @brief (0x53): Store into array of arrays.
+     */
+    void aastore();
+    /**
+     * @brief (0x54): Store into byte array.
+     */
+    void bastore();
+    /**
+     * @brief (0x55): Store into char array.
+     */
+    void castore();
+    /**
+     * @brief (0x56): Store into short array.
+     */
+    void sastore();
+
     void bipush();
+
+    void sipush();
 
     void getstatic();
 
+    void newarray();
+
     void multianewarray();
+
+    void if_icmpge();
+
+    void gotoInstruction();
 
     void invokevirtual();
     void invokestatic();

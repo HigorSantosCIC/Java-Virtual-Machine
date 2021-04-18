@@ -12,9 +12,13 @@ Interpreter::~Interpreter()
 
 void Interpreter::run()
 {
+    int i = 1;
+
     while (!runtime_data_area->frame_stack->isEmpty())
     {
         u1 instruction = runtime_data_area->fetchInstruction(0);
+
+        std::cout << i << ". Executing " << std::hex << unsigned(instruction) << std::dec << std::endl;
 
         switch (instruction)
         {
@@ -39,14 +43,29 @@ void Interpreter::run()
         case 0x08:
             iconst_5();
             break;
+        case 0xb:
+            fconst_0();
+            break;
+        case 0xc:
+            fconst_1();
+            break;
+        case 0xd:
+            fconst_2();
+            break;
         case 0x10:
             bipush();
+            break;
+        case 0x11:
+            sipush();
             break;
         case 0x12:
             ldc();
             break;
         case 0x14:
             ldc2_w();
+            break;
+        case 0x15:
+            iload();
             break;
         case (0x2a):
             aload_0();
@@ -87,6 +106,12 @@ void Interpreter::run()
         case (0x1d):
             iload_3();
             break;
+        case (0x36):
+            istore();
+            break;
+        case (0x3a):
+            astore();
+            break;
         case (0x4b):
             astore_0();
             break;
@@ -111,8 +136,32 @@ void Interpreter::run()
         case 0x4a:
             dstore_3();
             break;
+        case 0x4f:
+            iastore();
+            break;
+        case 0x50:
+            lastore();
+            break;
+        case 0x51:
+            fastore();
+            break;
+        case 0x52:
+            dastore();
+            break;
         case (0x53):
             aastore();
+            break;
+        case 0x54:
+            bastore();
+            break;
+        case 0x55:
+            castore();
+            break;
+        case 0x56:
+            sastore();
+            break;
+        case 0x59:
+            dup();
             break;
         case 0x63:
             dadd();
@@ -132,6 +181,15 @@ void Interpreter::run()
         case 0x77:
             dneg();
             break;
+        case 0x84:
+            iinc();
+            break;
+        case (0xa2):
+            if_icmpge();
+            break;
+        case (0xa7):
+            gotoInstruction();
+            break;
         case (0xaa):
             tableswitch();
             break;
@@ -150,14 +208,338 @@ void Interpreter::run()
         case (0xb8):
             invokestatic();
             break;
+        case (0xbc):
+            newarray();
+            break;
         case (0xc5):
             multianewarray();
             break;
         default:
-            std::cout << "Exiting interpreter on opcode " << unsigned(instruction) << std::endl;
+            std::cout << "Exiting interpreter on opcode " << std::hex << unsigned(instruction) <<  std::dec << std::endl;
             return;
         }
+
+        i++;
     }
+}
+
+void Interpreter::iinc()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    //TODO: Add support for wide instructions.
+
+    u2 index = (u2)runtime_data_area->fetchInstruction(1);
+    int32_t inc = (int32_t)runtime_data_area->fetchInstruction(2);
+
+    GenericType *value_generic = current_frame->getLocalVariable(index);
+
+    value_generic->data.int_value += inc;
+
+    current_frame->setLocalVariable(value_generic, index);
+    current_frame->setPcByOffset(3);
+}
+
+void Interpreter::gotoInstruction()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    u1 byte2 = runtime_data_area->fetchInstruction(2);
+
+    int16_t offset = (byte1 << 8) | byte2;
+
+    current_frame->setPcByOffset(offset);
+}
+
+void Interpreter::if_icmpge()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic2 = current_frame->popValueFromOperandStack();
+
+    if (value_generic2->data.int_value >= value_generic1->data.int_value)
+    {
+        u1 byte1 = runtime_data_area->fetchInstruction(1);
+        u1 byte2 = runtime_data_area->fetchInstruction(2);
+
+        int16_t offset = (byte1 << 8) | byte2;
+        current_frame->setPcByOffset(offset);
+
+        return;
+    }
+
+    current_frame->setPcByOffset(3);
+}
+
+void Interpreter::iload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide instruction.
+
+    GenericType *value_generic = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::istore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    //TODO: Validate if value_generic is an array
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide operator
+
+    current_frame->setLocalVariable(value_generic, index);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::astore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    //TODO: Validate if value_generic is an array
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide operator
+
+    current_frame->setLocalVariable(value_generic, index);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::dastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::lastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is long.
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::fastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is float.
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    std::cout << "Value: " << value_generic->data.float_value << std::endl;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::bastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is byte.
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::castore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is a char.
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::sastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is a short.
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::iastore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is integer.
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    if (array_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+        exit(1);
+    }
+
+    array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dup()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->getTopOperand();
+
+    // TODO: Validate if value_generic is not double or long
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::newarray()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *count_generic = current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if count_generic is an integer
+
+    GenericType *array_default_value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    Array *array = new Array();
+    u1 array_type = runtime_data_area->fetchInstruction(1);
+
+    // Initialize value_generic with default value of array_type
+    switch (array_type)
+    {
+    case 4:
+        array_default_value_generic->data.boolean_value = false;
+        break;
+    case 5:
+        array_default_value_generic->data.char_value = '\u0000';
+        break;
+    case 6:
+        array_default_value_generic->data.float_value = 0;
+        break;
+    case 7:
+        array_default_value_generic->data.double_value = 0;
+        break;
+    case 8:
+        array_default_value_generic->data.byte_value = 0;
+        break;
+    case 9:
+        array_default_value_generic->data.short_value = 0;
+        break;
+    case 10:
+        array_default_value_generic->data.int_value = 0;
+        break;
+    case 11:
+        array_default_value_generic->data.long_value = 0;
+        break;
+    }
+
+    for (int i = 0; i < count_generic->data.int_value; i++)
+    {
+        array->data.push_back(array_default_value_generic);
+    }
+
+    GenericType *array_generic = (GenericType *)malloc(sizeof(GenericType));
+    array_generic->data.array_value = array;
+
+    current_frame->pushValueIntoOperandStack(array_generic);
+    current_frame->setPcByOffset(2);
 }
 
 void Interpreter::aastore()
@@ -466,6 +848,34 @@ void Interpreter::iconst_4()
 void Interpreter::iconst_5()
 {
     iconst_n(5);
+}
+
+void Interpreter::fconst_0()
+{
+    fconst_n(0);
+}
+
+void Interpreter::fconst_1()
+{
+    fconst_n(1);
+}
+
+void Interpreter::fconst_2()
+{
+    fconst_n(2);
+}
+
+void Interpreter::fconst_n(int value)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    value_generic->data.float_value = value;
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
+    current_frame->setPcByOffset(1);
 }
 
 void Interpreter::ldc2_w()
@@ -865,6 +1275,25 @@ void Interpreter::bipush()
     current_frame->pushValueIntoOperandStack(int_generic);
 
     current_frame->setPcByOffset(2);
+}
+
+void Interpreter::sipush()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    u1 byte2 = runtime_data_area->fetchInstruction(2);
+
+    u2 short_value = (byte1 << 8) | byte2;
+
+    int32_t extended_short = (int32_t) signed(short_value);
+
+    GenericType *int_generic = (GenericType *)malloc(sizeof(GenericType));
+    int_generic->data.int_value = extended_short;
+
+    current_frame->pushValueIntoOperandStack(int_generic);
+
+    current_frame->setPcByOffset(3);
 }
 
 void Interpreter::multianewarray()
