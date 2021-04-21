@@ -25,6 +25,71 @@ private:
 
     // Indicates if the next instruction to be executed is wide. This affects the execution flow of the instruction.
     bool isInstructionWide;
+    
+    /**
+     * @brief (0x00): Do nothing.
+     */
+    void nop();
+
+    /**
+     * @brief (0x01): Push the null object reference onto the operand stack.
+     */
+    void aconst_null();
+
+    /**
+     * @brief (iconst_<n>): Push the int constant <n> (-1, 0, 1, 2, 3, 4 or 5) onto the operand stack.
+     */
+    void iconst_n(int value);
+
+    /**
+     * @brief (0x02): Push the int constant -1 onto the operand stack.
+     */
+    void iconst_m1();
+
+    /**
+     * @brief (0x03): Push the int constant 0 onto the operand stack.
+     */
+    void iconst_0();
+
+    /**
+     * @brief (0x04): Push the int constant 1 onto the operand stack.
+     */
+    void iconst_1();
+
+    /**
+     * @brief (0x05): Push the int constant 2 onto the operand stack.
+     */
+    void iconst_2();
+
+    /**
+     * @brief (0x06): Push the int constant 3 onto the operand stack.
+     */
+    void iconst_3();
+
+    /**
+     * @brief (0x07): Push the int constant 4 onto the operand stack.
+     */
+    void iconst_4();
+
+    /**
+     * @brief (0x08): Push the int constant 5 onto the operand stack.
+     */
+    void iconst_5();
+
+    /**
+     * @brief (lconst_<n>): Push the long constant <n> (0 or 1) onto the operand stack.
+     */
+    void lconst_n(int64_t value);
+
+    /**
+     * @brief (0x09): Push the long constant 0 onto the operand stack.
+     */
+    void lconst_0();
+
+    /**
+     * @brief (0x0a): Push the long constant 1 onto the operand stack.
+     */
+    void lconst_1();
 
     void ldc();
 
@@ -36,7 +101,7 @@ private:
     void tableswitch();
 
     void iload();
-    void iload_n(int value);
+    void iload_n(int32_t value);
     void iload_0();
     void iload_1();
     void iload_2();
@@ -44,19 +109,10 @@ private:
 
     void istore();
 
-    void iconst_n(int value);
-    void iconst_m1();
-    void iconst_0();
-    void iconst_1();
-    void iconst_2();
-    void iconst_3();
-    void iconst_4();
-    void iconst_5();
-
     void fconst_0();
     void fconst_1();
     void fconst_2();
-    void fconst_n(int value);
+    void fconst_n(float value);
 
     void astore();
     void astore_0();
@@ -72,6 +128,10 @@ private:
     void aload_n(int index);
 
     void aaload();
+
+    void dconst_n(double value);
+    void dconst_0();
+    void dconst_1();
 
     void dstore_0();
     void dstore_1();
@@ -110,6 +170,9 @@ private:
      */
     void drem();
 
+    void pop();
+    void pop2();
+    
     void dup();
 
     void iinc();
