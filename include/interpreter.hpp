@@ -35,6 +35,21 @@ private:
 
     void tableswitch();
 
+    void aload();
+
+    /**
+     * @brief Common code for instructions (aaload, baload, caload...)
+     */
+    void type_aload();
+    void aaload();
+    void baload();
+    void caload();
+    void daload();
+    void faload();
+    void iaload();
+    void laload();
+    void saload();
+
     void iload();
     void iload_n(int value);
     void iload_0();
@@ -70,8 +85,6 @@ private:
     void aload_2();
     void aload_3();
     void aload_n(int index);
-
-    void aaload();
 
     void dstore_0();
     void dstore_1();
@@ -111,6 +124,7 @@ private:
     void drem();
 
     void dup();
+    void dup2();
 
     void iinc();
 
@@ -146,6 +160,10 @@ private:
      * @brief (0x56): Store into short array.
      */
     void sastore();
+    /**
+     * @brief (0x60): Add two integers from operand stack.
+     */
+    void iadd();
 
     void bipush();
 
@@ -154,6 +172,8 @@ private:
     void getstatic();
 
     void newarray();
+
+    void arraylength();
 
     void multianewarray();
 
