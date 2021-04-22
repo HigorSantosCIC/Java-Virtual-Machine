@@ -20,6 +20,12 @@ void Interpreter::run()
 
         switch (instruction)
         {
+        case 0x00:
+            nop();
+            break;
+        case 0x01:
+            aconst_null();
+            break;
         case 0x02:
             iconst_m1();
             break;
@@ -41,6 +47,12 @@ void Interpreter::run()
         case 0x08:
             iconst_5();
             break;
+        case 0x09:
+            lconst_0();
+            break;
+        case 0xa:
+            lconst_1();
+            break;
         case 0xb:
             fconst_0();
             break;
@@ -49,6 +61,12 @@ void Interpreter::run()
             break;
         case 0xd:
             fconst_2();
+            break;
+        case 0x0e:
+            dconst_0();
+            break;
+        case 0x0f:
+            dconst_1();
             break;
         case 0x10:
             bipush();
@@ -67,6 +85,18 @@ void Interpreter::run()
             break;
         case 0x19:
             aload();
+            break;
+        case (0x1a):
+            iload_0();
+            break;
+        case (0x1b):
+            iload_1();
+            break;
+        case (0x1c):
+            iload_2();
+            break;
+        case (0x1d):
+            iload_3();
             break;
         case (0x2a):
             aload_0();
@@ -115,18 +145,6 @@ void Interpreter::run()
             break;
         case (0x35):
             saload();
-            break;
-        case (0x1a):
-            iload_0();
-            break;
-        case (0x1b):
-            iload_1();
-            break;
-        case (0x1c):
-            iload_2();
-            break;
-        case (0x1d):
-            iload_3();
             break;
         case (0x36):
             istore();
@@ -181,6 +199,12 @@ void Interpreter::run()
             break;
         case 0x56:
             sastore();
+            break;
+        case 0x57:
+            pop();
+            break;
+        case 0x58:
+            pop2();
             break;
         case 0x59:
             dup();
@@ -377,6 +401,25 @@ void Interpreter::iadd()
     result->data.int_value = value_generic1->data.int_value + value_generic2->data.int_value;
 
     current_frame->pushValueIntoOperandStack(result);
+    current_frame->setPcByOffset(1);
+}
+void Interpreter::nop()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::aconst_null()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    // Tipo específico para receber NULL...
+    value_generic->data.array_value = NULL;
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
     current_frame->setPcByOffset(1);
 }
 
@@ -673,6 +716,27 @@ void Interpreter::iastore()
     current_frame->setPcByOffset(1);
 }
 
+void Interpreter::pop()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    current_frame->popValueFromOperandStack();
+
+    // TODO: Validate if value_generic is not double or long
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::pop2()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    current_frame->popValueFromOperandStack();
+    current_frame->popValueFromOperandStack();
+
+    current_frame->setPcByOffset(1);
+}
+
 void Interpreter::dup()
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
@@ -789,6 +853,10 @@ void Interpreter::ldc()
         std::string string_value = runtime_data_area->getNameFromConstantPoolEntry(constant_pool[index - 1]);
 
         value_generic->data.string_value = new std::string(string_value);
+    }
+    else
+    {
+        // TODO: Throw exception.
     }
 
     current_frame->pushValueIntoOperandStack(value_generic);
@@ -1000,7 +1068,30 @@ void Interpreter::iload_3()
     iload_n(3);
 }
 
-void Interpreter::iconst_n(int value)
+void Interpreter::lconst_n(int64_t value)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    value_generic->data.long_value = value;
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::lconst_0()
+{
+    lconst_n(0);
+}
+
+void Interpreter::lconst_1()
+{
+    lconst_n(1);
+}
+
+void Interpreter::iconst_n(int32_t value)
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
@@ -1050,26 +1141,49 @@ void Interpreter::iconst_5()
 
 void Interpreter::fconst_0()
 {
-    fconst_n(0);
+    fconst_n(0.0);
 }
 
 void Interpreter::fconst_1()
 {
-    fconst_n(1);
+    fconst_n(1.0);
 }
 
 void Interpreter::fconst_2()
 {
-    fconst_n(2);
+    fconst_n(2.0);
 }
 
-void Interpreter::fconst_n(int value)
+void Interpreter::fconst_n(float value)
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
     GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
 
     value_generic->data.float_value = value;
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::dconst_0()
+{
+    dconst_n(0);
+}
+
+void Interpreter::dconst_1()
+{
+    dconst_n(1);
+}
+
+void Interpreter::dconst_n(double value)
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    value_generic->data.double_value = value;
 
     current_frame->pushValueIntoOperandStack(value_generic);
 
