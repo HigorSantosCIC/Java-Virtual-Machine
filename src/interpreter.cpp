@@ -18,8 +18,6 @@ void Interpreter::run()
     {
         u1 instruction = runtime_data_area->fetchInstruction(0);
 
-        std::cout << i << ". Executing " << std::hex << unsigned(instruction) << std::dec << std::endl;
-
         switch (instruction)
         {
         case 0x00:
@@ -2821,7 +2819,6 @@ void Interpreter::getstatic()
 
     //TODO: Load field into operand stack
 }
-
 std::string Interpreter::splitByToken(std::string str, int position)
 {
     std::istringstream iss(str);
@@ -3006,10 +3003,11 @@ char Interpreter::getMultianewarrayTypeByClassName(std::string class_name)
 
 void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
 {
-    GenericType *value = runtime_data_area->frame_stack->getTop()->popValueFromOperandStack();
-
     if (descriptor.compare("()V") == 0)
         return;
+
+    GenericType *value = runtime_data_area->frame_stack->getTop()->popValueFromOperandStack();
+
     if (descriptor.compare("(B)V") == 0)
     {
         std::cout << value->data.byte_value;
