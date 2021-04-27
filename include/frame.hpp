@@ -17,9 +17,22 @@ class Frame
 {
 public:
     /**
-     * @brief Creates a frame.
+     * @brief Creates a frame
+     * 
+     * @param class_file ClassFile containing loaded class file data
+     * @param p_method_name Method name, used as key to loaded ClassFile in MethodArea.
+     * @param p_method_descriptor Method descriptor to represent return and argument types.
      */
     Frame(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor);
+
+    /**
+     * @brief Creates a frame
+     * 
+     * @param class_file ClassFile containing loaded class file data
+     * @param p_method_name Method name, used as key to loaded ClassFile in MethodArea.
+     * @param p_method_descriptor Method descriptor to represent return and argument types.
+     * @param arguments arguments to be inserted in local variable array.
+     */
     Frame(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor, std::vector<GenericType *> arguments);
     ~Frame();
 

@@ -27,11 +27,6 @@ private:
     bool isInstructionWide;
 
     /* TODO:
-
-    19 (0x13) ldc_w
-    22 (0x16) lload
-    23 (0x17) fload
-    24 (0x18) dload
     55 (0x37) lstore
     56 (0x38) fstore
     57 (0x39) dstore
@@ -175,7 +170,7 @@ private:
     /**
      * @brief (0x13): Push item from run-time constant pool.
      */
-    //void ldc_w();
+    void ldc_w();
 
     /**
      * @brief (0x14): Push long or double from run-time constant pool (wide index).
@@ -190,17 +185,17 @@ private:
     /**
      * @brief (0x16): Load long from local variable.
      */
-    //void lload();
+    void lload();
 
     /**
      * @brief (0x17): Load float from local variable.
      */
-    //void fload();
+    void fload();
 
     /**
      * @brief (0x18): Load double from local variable.
      */
-    //void dload();
+    void dload();
 
     /**
      * @brief (0x19): Load reference from local variable.
@@ -390,17 +385,17 @@ private:
     /**
      * @brief (0x37): Store long into local variable.
      */
-    //void lstore();
+    void lstore();
 
     /**
      * @brief (0x38): Store float into local variable.
      */
-    //void fstore();
+    void fstore();
 
     /**
      * @brief (0x39): Store double into local variable.
      */
-    //void dstore();
+    void dstore();
 
     /**
      * @brief (0x3a): Store reference into local variable.
@@ -1004,7 +999,7 @@ private:
     /**
      * @brief (0xa9): Return from subroutine.
      */
-    //void ret();
+    void ret();
 
     /**
      * @brief (0xaa): Access jump table by index and jump.
@@ -1168,9 +1163,10 @@ private:
     //void jsr_w();
 
     /**
-     * @brief TODO.
+     * @brief Prints top of operand stack (GenericType*) based on method descriptor.
+     * 
+     * @param method_descriptor Method descriptor based on JVMS8 documentation.
      */
-
     void printGenericTypeByDescriptor(std::string method_descriptor);
 
     /**
@@ -1198,6 +1194,13 @@ private:
     int getNumberOfArgumentsByDescriptor(std::string method_descriptor);
 
     // ? Where to save splitByToken method? Consider creater a StringUtils namespace.
+    /**
+     * @brief Split a string containing ',' (comma) in substrings, and return requested substring.
+     * 
+     * @param str String to be analyzed and split
+     * @param position Substring to be returned, e.g 0 returns the substring from interval [0, first occurrence of ',')
+     * @return string number of arguments in method descriptor.
+     */
     std::string splitByToken(std::string str, int position);
 
     // ! Review and test

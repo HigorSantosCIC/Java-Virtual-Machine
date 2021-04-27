@@ -79,11 +79,23 @@ void Interpreter::run()
         case 0x12:
             ldc();
             break;
+        case 0x13:
+            ldc_w();
+            break;
         case 0x14:
             ldc2_w();
             break;
         case 0x15:
             iload();
+            break;
+        case 0x16:
+            lload();
+            break;
+        case 0x17:
+            fload();
+            break;
+        case 0x18:
+            dload();
             break;
         case (0x1a):
             iload_0();
@@ -150,6 +162,15 @@ void Interpreter::run()
             break;
         case (0x36):
             istore();
+            break;
+        case (0x37):
+            lstore();
+            break;
+        case (0x38):
+            fstore();
+            break;
+        case (0x39):
+            dstore();
             break;
         case (0x3a):
             astore();
@@ -480,6 +501,9 @@ void Interpreter::run()
             break;
         case (0xa7):
             gotoInstruction();
+            break;
+        case 0xa9:
+            ret();
             break;
         case (0xaa):
             tableswitch();
@@ -1026,7 +1050,8 @@ void Interpreter::if_acmpeq()
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
 
-    if (value_generic1->data.array_value == value_generic2->data.array_value){
+    if (value_generic1->data.array_value == value_generic2->data.array_value)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1045,7 +1070,8 @@ void Interpreter::if_acmpne()
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
 
-    if (value_generic1->data.array_value != value_generic2->data.array_value){
+    if (value_generic1->data.array_value != value_generic2->data.array_value)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1063,13 +1089,18 @@ void Interpreter::lcmp()
 
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
-    GenericType *value_resultado = (GenericType*)malloc(sizeof(GenericType));
+    GenericType *value_resultado = (GenericType *)malloc(sizeof(GenericType));
 
-    if(value_generic1->data.long_value > value_generic2->data.long_value){
+    if (value_generic1->data.long_value > value_generic2->data.long_value)
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.long_value == value_generic2->data.long_value){
+    }
+    else if (value_generic1->data.long_value == value_generic2->data.long_value)
+    {
         value_resultado->data.int_value = 0;
-    }else{
+    }
+    else
+    {
         value_resultado->data.int_value = -1;
     }
 
@@ -1083,15 +1114,22 @@ void Interpreter::fcmpl()
 
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
-    GenericType *value_resultado = (GenericType*)malloc(sizeof(GenericType));
+    GenericType *value_resultado = (GenericType *)malloc(sizeof(GenericType));
 
-    if(isnan(value_generic1->data.float_value) || isnan(value_generic2->data.float_value)){
+    if (isnan(value_generic1->data.float_value) || isnan(value_generic2->data.float_value))
+    {
         value_resultado->data.int_value = -1;
-    }else if(value_generic1->data.float_value > value_generic2->data.float_value){
+    }
+    else if (value_generic1->data.float_value > value_generic2->data.float_value)
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.float_value == value_generic2->data.float_value){
+    }
+    else if (value_generic1->data.float_value == value_generic2->data.float_value)
+    {
         value_resultado->data.int_value = 0;
-    }else{
+    }
+    else
+    {
         value_resultado->data.int_value = -1;
     }
 
@@ -1105,15 +1143,22 @@ void Interpreter::fcmpg()
 
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
-    GenericType *value_resultado = (GenericType*)malloc(sizeof(GenericType));
+    GenericType *value_resultado = (GenericType *)malloc(sizeof(GenericType));
 
-    if(isnan(value_generic1->data.float_value) || isnan(value_generic2->data.float_value)){
+    if (isnan(value_generic1->data.float_value) || isnan(value_generic2->data.float_value))
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.float_value > value_generic2->data.float_value){
+    }
+    else if (value_generic1->data.float_value > value_generic2->data.float_value)
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.float_value == value_generic2->data.float_value){
+    }
+    else if (value_generic1->data.float_value == value_generic2->data.float_value)
+    {
         value_resultado->data.int_value = 0;
-    }else{
+    }
+    else
+    {
         value_resultado->data.int_value = -1;
     }
 
@@ -1127,15 +1172,22 @@ void Interpreter::dcmpl()
 
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
-    GenericType *value_resultado = (GenericType*)malloc(sizeof(GenericType));
+    GenericType *value_resultado = (GenericType *)malloc(sizeof(GenericType));
 
-    if(isnan(value_generic1->data.double_value) || isnan(value_generic2->data.double_value)){
+    if (isnan(value_generic1->data.double_value) || isnan(value_generic2->data.double_value))
+    {
         value_resultado->data.int_value = -1;
-    }else if(value_generic1->data.double_value > value_generic2->data.double_value){
+    }
+    else if (value_generic1->data.double_value > value_generic2->data.double_value)
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.double_value == value_generic2->data.double_value){
+    }
+    else if (value_generic1->data.double_value == value_generic2->data.double_value)
+    {
         value_resultado->data.int_value = 0;
-    }else{
+    }
+    else
+    {
         value_resultado->data.int_value = -1;
     }
 
@@ -1149,15 +1201,22 @@ void Interpreter::dcmpg()
 
     GenericType *value_generic1 = current_frame->popValueFromOperandStack();
     GenericType *value_generic2 = current_frame->popValueFromOperandStack();
-    GenericType *value_resultado = (GenericType*)malloc(sizeof(GenericType));
+    GenericType *value_resultado = (GenericType *)malloc(sizeof(GenericType));
 
-    if(isnan(value_generic1->data.double_value) || isnan(value_generic2->data.double_value)){
+    if (isnan(value_generic1->data.double_value) || isnan(value_generic2->data.double_value))
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.double_value > value_generic2->data.double_value){
+    }
+    else if (value_generic1->data.double_value > value_generic2->data.double_value)
+    {
         value_resultado->data.int_value = 1;
-    }else if(value_generic1->data.double_value == value_generic2->data.double_value){
+    }
+    else if (value_generic1->data.double_value == value_generic2->data.double_value)
+    {
         value_resultado->data.int_value = 0;
-    }else{
+    }
+    else
+    {
         value_resultado->data.int_value = -1;
     }
 
@@ -1171,7 +1230,8 @@ void Interpreter::ifeq()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.int_value == 0){
+    if (value_generic->data.int_value == 0)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1190,7 +1250,8 @@ void Interpreter::ifne()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.int_value != 0){
+    if (value_generic->data.int_value != 0)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1209,7 +1270,8 @@ void Interpreter::iflt()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.int_value < 0){
+    if (value_generic->data.int_value < 0)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1228,7 +1290,8 @@ void Interpreter::ifge()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.int_value >= 0){
+    if (value_generic->data.int_value >= 0)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1247,7 +1310,8 @@ void Interpreter::ifgt()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.int_value > 0){
+    if (value_generic->data.int_value > 0)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1266,7 +1330,8 @@ void Interpreter::ifle()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.int_value <= 0){
+    if (value_generic->data.int_value <= 0)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -1318,6 +1383,57 @@ void Interpreter::astore()
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
     //TODO: Validate if value_generic is an array
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide operator
+
+    current_frame->setLocalVariable(value_generic, index);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::lstore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    //TODO: Validate if value_generic is a long
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide operator
+
+    current_frame->setLocalVariable(value_generic, index);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::fstore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    //TODO: Validate if value_generic is a float
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide operator
+
+    current_frame->setLocalVariable(value_generic, index);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::dstore()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *value_generic = current_frame->popValueFromOperandStack();
+
+    //TODO: Validate if value_generic is a double
 
     u1 byte1 = runtime_data_area->fetchInstruction(1);
     int16_t index = (int16_t)byte1;
@@ -1561,10 +1677,9 @@ void Interpreter::dup2()
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
-    GenericType *value_generic1 = current_frame->getTopOperand();
-    GenericType *value_generic2 = current_frame->getTopOperand();
+    GenericType *value_generic1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic2 = current_frame->popValueFromOperandStack();
 
-    //Form 1
     current_frame->pushValueIntoOperandStack(value_generic2);
     current_frame->pushValueIntoOperandStack(value_generic1);
     current_frame->pushValueIntoOperandStack(value_generic2);
@@ -1577,9 +1692,9 @@ void Interpreter::dup2_x1()
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
-    GenericType *value_generic1 = current_frame->getTopOperand();
-    GenericType *value_generic2 = current_frame->getTopOperand();
-    GenericType *value_generic3 = current_frame->getTopOperand();
+    GenericType *value_generic1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic2 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic3 = current_frame->popValueFromOperandStack();
 
     //Form 1
     current_frame->pushValueIntoOperandStack(value_generic2);
@@ -1595,10 +1710,10 @@ void Interpreter::dup2_x2()
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
-    GenericType *value_generic1 = current_frame->getTopOperand();
-    GenericType *value_generic2 = current_frame->getTopOperand();
-    GenericType *value_generic3 = current_frame->getTopOperand();
-    GenericType *value_generic4 = current_frame->getTopOperand();
+    GenericType *value_generic1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic2 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic3 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic4 = current_frame->popValueFromOperandStack();
 
     //Form 1
     current_frame->pushValueIntoOperandStack(value_generic2);
@@ -1615,8 +1730,8 @@ void Interpreter::swap()
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
-    GenericType *value_generic1 = current_frame->getTopOperand();
-    GenericType *value_generic2 = current_frame->getTopOperand();
+    GenericType *value_generic1 = current_frame->popValueFromOperandStack();
+    GenericType *value_generic2 = current_frame->popValueFromOperandStack();
 
     current_frame->pushValueIntoOperandStack(value_generic1);
     current_frame->pushValueIntoOperandStack(value_generic2);
@@ -2523,11 +2638,13 @@ void Interpreter::iushr()
     GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
 
     GenericType *result = (GenericType *)malloc(sizeof(GenericType));
-    
-    if (value_generic_1->data.int_value < 0) {
-		result->data.int_value = value_generic_1->data.int_value + (2<<~(value_generic_2->data.int_value));
-	}
-    else{
+
+    if (value_generic_1->data.int_value < 0)
+    {
+        result->data.int_value = value_generic_1->data.int_value + (2 << ~(value_generic_2->data.int_value));
+    }
+    else
+    {
         result->data.int_value = value_generic_1->data.int_value >> (0x1f & value_generic_2->data.int_value);
     }
     current_frame->pushValueIntoOperandStack(result);
@@ -2542,11 +2659,13 @@ void Interpreter::lushr()
     GenericType *value_generic_2 = current_frame->popValueFromOperandStack();
 
     GenericType *result = (GenericType *)malloc(sizeof(GenericType));
-    
-    if (value_generic_1->data.int_value < 0) {
-		result->data.long_value = value_generic_1->data.long_value + ((int64_t)2<<~(value_generic_2->data.int_value));
-	}
-    else{
+
+    if (value_generic_1->data.int_value < 0)
+    {
+        result->data.long_value = value_generic_1->data.long_value + ((int64_t)2 << ~(value_generic_2->data.int_value));
+    }
+    else
+    {
         result->data.long_value = value_generic_1->data.long_value >> (0x1f & value_generic_2->data.int_value);
     }
     current_frame->pushValueIntoOperandStack(result);
@@ -2897,7 +3016,8 @@ void Interpreter::ifnull()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.array_value == NULL){
+    if (value_generic->data.array_value == NULL)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -2916,7 +3036,8 @@ void Interpreter::ifnonnull()
 
     GenericType *value_generic = current_frame->popValueFromOperandStack();
 
-    if(value_generic->data.array_value != NULL){
+    if (value_generic->data.array_value != NULL)
+    {
         u1 byte1 = runtime_data_area->fetchInstruction(1);
         u1 byte2 = runtime_data_area->fetchInstruction(2);
 
@@ -3244,4 +3365,94 @@ void Interpreter::lstore_n(int index)
     current_frame->setLocalVariable(value_generic, index);
 
     current_frame->setPcByOffset(1);
+}
+
+void Interpreter::ret()
+{
+    //TODO
+}
+
+void Interpreter::ldc_w()
+{
+    u1 index_byte1 = runtime_data_area->fetchInstruction(1);
+    u1 index_byte2 = runtime_data_area->fetchInstruction(2);
+
+    u2 index_value = (index_byte1 << 8) | index_byte2;
+
+    GenericType *value_generic = (GenericType *)malloc(sizeof(GenericType));
+
+    // Get reference to constant pool
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+    cp_info **constant_pool = current_frame->getConstantPool();
+
+    // Constant pool will contain the value of the long or double to be pushed into operand stack
+    cp_info *constant_pool_entry = constant_pool[index_value - 1];
+
+    if (constant_pool_entry->tag == CONSTANT_String)
+    {
+        for (int i = 0; i < constant_pool_entry->info.utf8_info->length; i++)
+        {
+            value_generic->data.string_value += constant_pool_entry->info.utf8_info->bytes[i];
+        }
+    }
+    else if (constant_pool_entry->tag == CONSTANT_Integer)
+    {
+        value_generic->data.int_value = (int32_t)constant_pool_entry->info.integer_info->bytes;
+    }
+    else if (constant_pool_entry->tag == CONSTANT_Float)
+    {
+        value_generic->data.float_value = *(float *)&constant_pool_entry->info.float_info->bytes;
+    }
+    else
+    {
+        // TODO: Throw exception.
+    }
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(3);
+}
+
+void Interpreter::fload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide instruction.
+
+    GenericType *value_generic = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::lload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide instruction.
+
+    GenericType *value_generic = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::dload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide instruction.
+
+    GenericType *value_generic = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(2);
 }

@@ -12,6 +12,12 @@ public:
 
     void initializeFrameStack();
 
+    /**
+     * @brief Fetch instruction in code attribute of current frame's class file.
+     * @param pc_offset Offset from current PC value to be searched. 
+     * Commonly, instructions with two code params have pc_offset of 1 and 2, respectively.
+     * 
+    */
     u1 fetchInstruction(u2 pc_offset);
 
     // ? Should getNameFromConstantPoolEntry be moved to cp_info
