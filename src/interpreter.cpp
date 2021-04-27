@@ -97,6 +97,9 @@ void Interpreter::run()
         case 0x18:
             dload();
             break;
+        case 0x19:
+            aload();
+            break;
         case (0x1a):
             iload_0();
             break;
@@ -157,8 +160,29 @@ void Interpreter::run()
         case (0x29):
             dload_3();
             break;
+        case (0x2e):
+            iaload();
+            break;
+        case (0x30):
+            faload();
+            break;
+        case (0x2f):
+            laload();
+            break;
+        case (0x31):
+            daload();
+            break;
         case (0x32):
             aaload();
+            break;
+        case (0x33):
+            baload();
+            break;
+        case (0x34):
+            caload();
+            break;
+        case (0x35):
+            saload();
             break;
         case (0x36):
             istore();
@@ -538,6 +562,9 @@ void Interpreter::run()
         case (0xbc):
             newarray();
             break;
+        case (0xbe):
+            arraylength();
+            break;
         case (0xc5):
             multianewarray();
             break;
@@ -557,6 +584,102 @@ void Interpreter::run()
 
         i++;
     }
+}
+
+void Interpreter::faload()
+{
+    type_aload();
+}
+
+void Interpreter::baload()
+{
+    type_aload();
+}
+
+void Interpreter::caload()
+{
+    type_aload();
+}
+
+void Interpreter::saload()
+{
+    type_aload();
+}
+
+void Interpreter::iaload()
+{
+    type_aload();
+}
+
+void Interpreter::daload()
+{
+    type_aload();
+}
+
+void Interpreter::aaload()
+{
+    type_aload();
+}
+
+void Interpreter::arraylength()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *array_generic = current_frame->popValueFromOperandStack();
+
+    //TODO: Validate array_generic
+
+    GenericType *length = (GenericType *)malloc(sizeof(GenericType));
+    length->data.int_value = array_generic->data.array_value->data.size();
+
+    current_frame->pushValueIntoOperandStack(length);
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::type_aload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *int_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if int_value_generic is integer
+
+    GenericType *array_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if array_value_generic is array*
+
+    if (array_value_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+    }
+
+    // TODO: Validate other properties and throw associated exceptions
+
+    // Push array element at index referenced by int_value_generic into operand stack
+    current_frame->pushValueIntoOperandStack(array_value_generic->data.array_value->data[int_value_generic->data.int_value]);
+
+    current_frame->setPcByOffset(1);
+}
+
+void Interpreter::laload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    GenericType *int_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if int_value_generic is integer
+
+    GenericType *array_value_generic = current_frame->popValueFromOperandStack();
+    // TODO: Validate if array_value_generic is array*
+
+    if (array_value_generic->data.array_value == NULL)
+    {
+        std::cout << "NullPointerException" << std::endl;
+    }
+
+    // TODO: Validate other properties and throw associated exceptions
+
+    // Push array element at index referenced by int_value_generic into operand stack
+    current_frame->pushValueIntoOperandStack(array_value_generic->data.array_value->data[int_value_generic->data.int_value]);
+
+    current_frame->setPcByOffset(1);
 }
 
 void Interpreter::nop()
@@ -1355,7 +1478,17 @@ void Interpreter::iload()
 
     GenericType *value_generic = current_frame->getLocalVariable(index);
 
-    current_frame->pushValueIntoOperandStack(value_generic);
+    /* 
+        A copy of value_generic is created to avoid multiple references to the same value.
+        
+        In this scenario, multiple references are dangerous because the operand stack values
+        often change, and this  would also change values of local variables table accordingly.
+        This is not a correct behaviour, and affects the execution of a .class.
+    */
+    GenericType *value_generic_copy = (GenericType *)malloc(sizeof(GenericType));
+    value_generic_copy->data.int_value = value_generic->data.int_value;
+
+    current_frame->pushValueIntoOperandStack(value_generic_copy);
     current_frame->setPcByOffset(2);
 }
 
@@ -1503,8 +1636,6 @@ void Interpreter::fastore()
     }
 
     array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
-
-    std::cout << "Value: " << value_generic->data.float_value << std::endl;
 
     current_frame->setPcByOffset(1);
 }
@@ -2288,29 +2419,6 @@ void Interpreter::astore_n(int index)
     current_frame->setPcByOffset(1);
 }
 
-void Interpreter::aaload()
-{
-    Frame *current_frame = runtime_data_area->frame_stack->getTop();
-
-    GenericType *int_value_generic = current_frame->popValueFromOperandStack();
-    // TODO: Validate if int_value_generic is int
-
-    GenericType *array_value_generic = current_frame->popValueFromOperandStack();
-    // TODO: Validate if array_value_generic is array*
-
-    if (array_value_generic->data.array_value == NULL)
-    {
-        std::cout << "NullPointerException" << std::endl;
-    }
-
-    // TODO: Validate other properties and throw associated exceptions
-
-    // Push array element at index referenced by int_value_generic into operand stack
-    current_frame->pushValueIntoOperandStack(array_value_generic->data.array_value->data[int_value_generic->data.int_value]);
-
-    current_frame->setPcByOffset(1);
-}
-
 void Interpreter::lload_0()
 {
     lload_n(0);
@@ -2777,7 +2885,7 @@ void Interpreter::bipush()
 
     u1 byte = runtime_data_area->fetchInstruction(1);
 
-    int32_t extended_byte = (int32_t) signed(byte);
+    int32_t extended_byte = (int32_t)(int8_t)byte;
 
     GenericType *int_generic = (GenericType *)malloc(sizeof(GenericType));
     int_generic->data.int_value = extended_byte;
@@ -2900,6 +3008,8 @@ void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
 {
     GenericType *value = runtime_data_area->frame_stack->getTop()->popValueFromOperandStack();
 
+    if (descriptor.compare("()V") == 0)
+        return;
     if (descriptor.compare("(B)V") == 0)
     {
         std::cout << value->data.byte_value;
@@ -2916,6 +3026,7 @@ void Interpreter::printGenericTypeByDescriptor(std::string descriptor)
     }
     else if (descriptor.compare("(F)V") == 0)
     {
+        std::cout.precision(std::numeric_limits<float>::max_digits10);
         std::cout << value->data.float_value;
     }
     else if (descriptor.compare("(I)V") == 0)
@@ -3443,6 +3554,21 @@ void Interpreter::lload()
 }
 
 void Interpreter::dload()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 byte1 = runtime_data_area->fetchInstruction(1);
+    int16_t index = (int16_t)byte1;
+
+    //TODO: Add support for wide instruction.
+
+    GenericType *value_generic = current_frame->getLocalVariable(index);
+
+    current_frame->pushValueIntoOperandStack(value_generic);
+    current_frame->setPcByOffset(2);
+}
+
+void Interpreter::aload()
 {
     Frame *current_frame = runtime_data_area->frame_stack->getTop();
 
