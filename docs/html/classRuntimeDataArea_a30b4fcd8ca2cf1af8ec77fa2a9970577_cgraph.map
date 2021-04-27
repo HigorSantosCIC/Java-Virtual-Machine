@@ -1,0 +1,6 @@
+<map id="RuntimeDataArea::loadClassByName" name="RuntimeDataArea::loadClassByName">
+<area shape="rect" id="node1" title="Load class file and add it to method area. If class file has init method, add it to frame." alt="" coords="5,49,215,90"/>
+<area shape="rect" id="node2" href="$classMethodArea.html#ad3512e5a5b7e79e198543f9fff959f63" title="Add loaded class file into method area." alt="" coords="280,5,448,32"/>
+<area shape="rect" id="node3" href="$classMethodArea.html#a72aebf3a316ba3ef32a9e0fb3cdc7e6b" title="Asserts if a given class is loaded into classes map." alt="" coords="263,56,465,83"/>
+<area shape="rect" id="node4" href="$classFrameStack.html#a53d65a2ecd217d894c82cb6106d8ad9c" title="Push frame to the stack." alt="" coords="295,107,433,133"/>
+</map>

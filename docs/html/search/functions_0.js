@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['frame_79',['Frame',['../classFrame.html#a399b84417837574806ba94e60bb0021a',1,'Frame']]]
+  ['addclass_96',['addClass',['../classMethodArea.html#ad3512e5a5b7e79e198543f9fff959f63',1,'MethodArea']]]
 ];

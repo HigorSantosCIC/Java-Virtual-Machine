@@ -1,0 +1,5 @@
+<map id="ClassFile::getInstructionOrOperand" name="ClassFile::getInstructionOrOperand">
+<area shape="rect" id="node1" title="1) Fetch method in class_file;" alt="" coords="5,27,184,69"/>
+<area shape="rect" id="node2" href="$structClassFile.html#a0f89ea4d0dd46574ebd22f9bc61d1097" title="Get code from a method." alt="" coords="232,5,440,32"/>
+<area shape="rect" id="node3" href="$structClassFile.html#ae814840040973bd257f8ccef3e91cf36" title="Search method in the class_file by its name and descriptor." alt="" coords="237,57,435,98"/>
+</map>

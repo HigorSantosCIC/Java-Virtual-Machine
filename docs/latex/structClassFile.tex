@@ -3,7 +3,30 @@
 
 
 Collaboration diagram for Class\+File\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structClassFile__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structClassFile_a25787d4342311fd5b27ef2ed362399c3}\label{structClassFile_a25787d4342311fd5b27ef2ed362399c3}} 
+std\+::string {\bfseries get\+Class\+Name} ()
+\item 
+\mbox{\hyperlink{structmethod__info}{method\+\_\+info}} $\ast$ \mbox{\hyperlink{structClassFile_ae814840040973bd257f8ccef3e91cf36}{search\+Method\+By\+Name\+And\+Descriptor}} (std\+::string method\+\_\+name, std\+::string method\+\_\+descriptor)
+\begin{DoxyCompactList}\small\item\em Search method in the class\+\_\+file by its name and descriptor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structClassFile_aa751124bab7b4aca429f47de8fa8bcfc}\label{structClassFile_aa751124bab7b4aca429f47de8fa8bcfc}} 
+std\+::string {\bfseries get\+Name\+From\+Constant\+Pool\+Entry} (\mbox{\hyperlink{structcp__info}{cp\+\_\+info}} $\ast$constant\+\_\+pool\+\_\+entry)
+\item 
+u1 $\ast$ \mbox{\hyperlink{structClassFile_a0f89ea4d0dd46574ebd22f9bc61d1097}{get\+Code\+By\+Method}} (\mbox{\hyperlink{structmethod__info}{method\+\_\+info}} $\ast$method)
+\begin{DoxyCompactList}\small\item\em Get code from a method. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{structClassFile_a1908f2507275ec928510a8caf696894a}{field\+Exists}} (std\+::string field\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Verify if a given field exists in the class file. \end{DoxyCompactList}\item 
+u1 \mbox{\hyperlink{structClassFile_a4246a0f1cfb00c1c3efcb57032820d95}{get\+Instruction\+Or\+Operand}} (std\+::string method\+\_\+name, std\+::string method\+\_\+descriptor, u4 pc)
+\begin{DoxyCompactList}\small\item\em 1) Fetch method in class\+\_\+file; \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -57,6 +80,128 @@ u2 {\bfseries attributes\+\_\+count}
 \end{DoxyCompactItemize}
 
 
-The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structClassFile_a1908f2507275ec928510a8caf696894a}\label{structClassFile_a1908f2507275ec928510a8caf696894a}} 
+\index{ClassFile@{ClassFile}!fieldExists@{fieldExists}}
+\index{fieldExists@{fieldExists}!ClassFile@{ClassFile}}
+\doxysubsubsection{\texorpdfstring{fieldExists()}{fieldExists()}}
+{\footnotesize\ttfamily bool Class\+File\+::field\+Exists (\begin{DoxyParamCaption}\item[{std\+::string}]{field\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Verify if a given field exists in the class file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em field\+\_\+name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(true) if field exists. 
+
+(false) if field doesn\textquotesingle{}t exists. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structClassFile_a0f89ea4d0dd46574ebd22f9bc61d1097}\label{structClassFile_a0f89ea4d0dd46574ebd22f9bc61d1097}} 
+\index{ClassFile@{ClassFile}!getCodeByMethod@{getCodeByMethod}}
+\index{getCodeByMethod@{getCodeByMethod}!ClassFile@{ClassFile}}
+\doxysubsubsection{\texorpdfstring{getCodeByMethod()}{getCodeByMethod()}}
+{\footnotesize\ttfamily u1 $\ast$ Class\+File\+::get\+Code\+By\+Method (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structmethod__info}{method\+\_\+info}} $\ast$}]{method }\end{DoxyParamCaption})}
+
+
+
+Get code from a method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & pointer to method that contains the desired code attribute \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+u1$\ast$ code array. 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structClassFile_a0f89ea4d0dd46574ebd22f9bc61d1097_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{structClassFile_a4246a0f1cfb00c1c3efcb57032820d95}\label{structClassFile_a4246a0f1cfb00c1c3efcb57032820d95}} 
+\index{ClassFile@{ClassFile}!getInstructionOrOperand@{getInstructionOrOperand}}
+\index{getInstructionOrOperand@{getInstructionOrOperand}!ClassFile@{ClassFile}}
+\doxysubsubsection{\texorpdfstring{getInstructionOrOperand()}{getInstructionOrOperand()}}
+{\footnotesize\ttfamily u1 Class\+File\+::get\+Instruction\+Or\+Operand (\begin{DoxyParamCaption}\item[{std\+::string}]{method\+\_\+name,  }\item[{std\+::string}]{method\+\_\+descriptor,  }\item[{u4}]{pc }\end{DoxyParamCaption})}
+
+
+
+1) Fetch method in class\+\_\+file; 
+
+2) Fetch code in method attributes;
+
+3) Extract instruction or operand indexed by pc register. 
+\begin{DoxyParams}{Parameters}
+{\em class\+\_\+name} & Key to the class file pointer in classes unordered map. \\
+\hline
+{\em method\+\_\+name} & Method name to be searched in class file identified by class\+\_\+name. \\
+\hline
+{\em method\+\_\+descriptor} & Method descriptor to be searched in class file identified by class\+\_\+name. \\
+\hline
+{\em pc} & index that points to code\mbox{[}\mbox{]} position to be returned. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(u1) instruction or operand indexed by pc 
+
+(N\+U\+LL) if class, method or code is not found. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structClassFile_a4246a0f1cfb00c1c3efcb57032820d95_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structClassFile_a4246a0f1cfb00c1c3efcb57032820d95_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{structClassFile_ae814840040973bd257f8ccef3e91cf36}\label{structClassFile_ae814840040973bd257f8ccef3e91cf36}} 
+\index{ClassFile@{ClassFile}!searchMethodByNameAndDescriptor@{searchMethodByNameAndDescriptor}}
+\index{searchMethodByNameAndDescriptor@{searchMethodByNameAndDescriptor}!ClassFile@{ClassFile}}
+\doxysubsubsection{\texorpdfstring{searchMethodByNameAndDescriptor()}{searchMethodByNameAndDescriptor()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structmethod__info}{method\+\_\+info}} $\ast$ Class\+File\+::search\+Method\+By\+Name\+And\+Descriptor (\begin{DoxyParamCaption}\item[{std\+::string}]{method\+\_\+name,  }\item[{std\+::string}]{method\+\_\+descriptor }\end{DoxyParamCaption})}
+
+
+
+Search method in the class\+\_\+file by its name and descriptor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em field\+\_\+name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(method\+\_\+info$\ast$) containing method data 
+
+(N\+U\+LL) if method doesn\textquotesingle{}t exists 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structClassFile_ae814840040973bd257f8ccef3e91cf36_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/class\+\_\+file.\+hpp\end{DoxyCompactItemize}
+include/class\+\_\+file.\+hpp\item 
+src/class\+\_\+file.\+cpp\end{DoxyCompactItemize}

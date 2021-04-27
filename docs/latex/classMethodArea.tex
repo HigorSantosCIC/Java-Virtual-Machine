@@ -1,0 +1,103 @@
+\hypertarget{classMethodArea}{}\doxysection{Method\+Area Class Reference}
+\label{classMethodArea}\index{MethodArea@{MethodArea}}
+
+
+{\ttfamily \#include $<$method\+\_\+area.\+hpp$>$}
+
+
+
+Collaboration diagram for Method\+Area\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=185pt]{classMethodArea__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classMethodArea_ad3512e5a5b7e79e198543f9fff959f63}{add\+Class}} (std\+::string class\+\_\+name, \mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$class\+\_\+file)
+\begin{DoxyCompactList}\small\item\em Add loaded class file into method area. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMethodArea_a8563020b51b842d036a8544464e5878f}{remove\+Class}} (std\+::string class\+\_\+name)
+\begin{DoxyCompactList}\small\item\em remove a class from the method area. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMethodArea_a42ff56fd2c0986bcae5fe068c6979ca1}\label{classMethodArea_a42ff56fd2c0986bcae5fe068c6979ca1}} 
+\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$ {\bfseries get\+Class\+File} (std\+::string class\+\_\+name)
+\item 
+bool \mbox{\hyperlink{classMethodArea_a72aebf3a316ba3ef32a9e0fb3cdc7e6b}{is\+Class\+Loaded}} (std\+::string class\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Asserts if a given class is loaded into classes map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Method area is a storage area for compiled code. When a class file is loaded, it must be inserted into the method area. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classMethodArea_ad3512e5a5b7e79e198543f9fff959f63}\label{classMethodArea_ad3512e5a5b7e79e198543f9fff959f63}} 
+\index{MethodArea@{MethodArea}!addClass@{addClass}}
+\index{addClass@{addClass}!MethodArea@{MethodArea}}
+\doxysubsubsection{\texorpdfstring{addClass()}{addClass()}}
+{\footnotesize\ttfamily void Method\+Area\+::add\+Class (\begin{DoxyParamCaption}\item[{std\+::string}]{class\+\_\+name,  }\item[{\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$}]{class\+\_\+file }\end{DoxyParamCaption})}
+
+
+
+Add loaded class file into method area. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em class\+\_\+name} & Name of the class used as key in the classes map. This is a valid key because class names must be unique. \\
+\hline
+{\em class\+\_\+file} & Pointer to a loaded class\+\_\+file. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classMethodArea_ad3512e5a5b7e79e198543f9fff959f63_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classMethodArea_a72aebf3a316ba3ef32a9e0fb3cdc7e6b}\label{classMethodArea_a72aebf3a316ba3ef32a9e0fb3cdc7e6b}} 
+\index{MethodArea@{MethodArea}!isClassLoaded@{isClassLoaded}}
+\index{isClassLoaded@{isClassLoaded}!MethodArea@{MethodArea}}
+\doxysubsubsection{\texorpdfstring{isClassLoaded()}{isClassLoaded()}}
+{\footnotesize\ttfamily bool Method\+Area\+::is\+Class\+Loaded (\begin{DoxyParamCaption}\item[{std\+::string}]{class\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Asserts if a given class is loaded into classes map. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em class\+\_\+name} & Key to the class file pointer in classes unordered map. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classMethodArea_a72aebf3a316ba3ef32a9e0fb3cdc7e6b_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classMethodArea_a8563020b51b842d036a8544464e5878f}\label{classMethodArea_a8563020b51b842d036a8544464e5878f}} 
+\index{MethodArea@{MethodArea}!removeClass@{removeClass}}
+\index{removeClass@{removeClass}!MethodArea@{MethodArea}}
+\doxysubsubsection{\texorpdfstring{removeClass()}{removeClass()}}
+{\footnotesize\ttfamily void Method\+Area\+::remove\+Class (\begin{DoxyParamCaption}\item[{std\+::string}]{class\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+remove a class from the method area. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em class\+\_\+name} & The name of the class to be removed. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/method\+\_\+area.\+hpp\item 
+src/method\+\_\+area.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,6 @@
+<map id="RuntimeDataArea::fetchInstruction" name="RuntimeDataArea::fetchInstruction">
+<area shape="rect" id="node1" title="Fetch instruction in code attribute of current frame&#39;s class file." alt="" coords="5,35,253,61"/>
+<area shape="rect" id="node2" href="$structClassFile.html#a4246a0f1cfb00c1c3efcb57032820d95" title="1) Fetch method in class_file;" alt="" coords="301,27,480,69"/>
+<area shape="rect" id="node3" href="$structClassFile.html#a0f89ea4d0dd46574ebd22f9bc61d1097" title="Get code from a method." alt="" coords="528,5,736,32"/>
+<area shape="rect" id="node4" href="$structClassFile.html#ae814840040973bd257f8ccef3e91cf36" title="Search method in the class_file by its name and descriptor." alt="" coords="533,57,731,98"/>
+</map>

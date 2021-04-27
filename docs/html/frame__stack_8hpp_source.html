@@ -73,32 +73,35 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define FRAME_STACK_HPP</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stack&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;frame.hpp&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classFrameStack.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="classFrameStack.html">FrameStack</a></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classFrameStack.html">FrameStack</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    ~<a class="code" href="classFrameStack.html">FrameStack</a>();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classFrameStack.html#a53d65a2ecd217d894c82cb6106d8ad9c">push</a>(<a class="code" href="classFrame.html">Frame</a> *frame);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classFrameStack.html#a7da31bde9fe2f7cf6a4e2497445223a5">pop</a>();</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classFrameStack.html#a0e89e1f0c4d8cf007e2095847b2430e2">isEmpty</a>();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">private</span>: </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    stack&lt;Frame *&gt; frame_stack;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;frame.hpp&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classFrameStack.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classFrameStack.html">FrameStack</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="classFrameStack.html">FrameStack</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    ~<a class="code" href="classFrameStack.html">FrameStack</a>();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classFrameStack.html#a53d65a2ecd217d894c82cb6106d8ad9c">push</a>(<a class="code" href="classFrame.html">Frame</a> *frame);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classFrameStack.html#a7da31bde9fe2f7cf6a4e2497445223a5">pop</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classFrameStack.html#a0e89e1f0c4d8cf007e2095847b2430e2">isEmpty</a>();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classFrame.html">Frame</a> *getTop();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::stack&lt;Frame *&gt; frame_stack;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassFrameStack_html_a53d65a2ecd217d894c82cb6106d8ad9c"><div class="ttname"><a href="classFrameStack.html#a53d65a2ecd217d894c82cb6106d8ad9c">FrameStack::push</a></div><div class="ttdeci">void push(Frame *frame)</div><div class="ttdoc">Push frame to the stack.</div></div>
-<div class="ttc" id="aclassFrameStack_html"><div class="ttname"><a href="classFrameStack.html">FrameStack</a></div><div class="ttdef"><b>Definition:</b> frame_stack.hpp:17</div></div>
-<div class="ttc" id="aclassFrameStack_html_a7da31bde9fe2f7cf6a4e2497445223a5"><div class="ttname"><a href="classFrameStack.html#a7da31bde9fe2f7cf6a4e2497445223a5">FrameStack::pop</a></div><div class="ttdeci">void pop()</div><div class="ttdoc">Pop the top frame of the stack.</div></div>
-<div class="ttc" id="aclassFrame_html"><div class="ttname"><a href="classFrame.html">Frame</a></div><div class="ttdef"><b>Definition:</b> frame.hpp:14</div></div>
-<div class="ttc" id="aclassFrameStack_html_a0e89e1f0c4d8cf007e2095847b2430e2"><div class="ttname"><a href="classFrameStack.html#a0e89e1f0c4d8cf007e2095847b2430e2">FrameStack::isEmpty</a></div><div class="ttdeci">bool isEmpty()</div><div class="ttdoc">Verify if the frame stack is empty.</div></div>
+<div class="ttc" id="aclassFrameStack_html_a53d65a2ecd217d894c82cb6106d8ad9c"><div class="ttname"><a href="classFrameStack.html#a53d65a2ecd217d894c82cb6106d8ad9c">FrameStack::push</a></div><div class="ttdeci">void push(Frame *frame)</div><div class="ttdoc">Push frame to the stack.</div><div class="ttdef"><b>Definition:</b> frame_stack.cpp:11</div></div>
+<div class="ttc" id="aclassFrameStack_html"><div class="ttname"><a href="classFrameStack.html">FrameStack</a></div><div class="ttdef"><b>Definition:</b> frame_stack.hpp:18</div></div>
+<div class="ttc" id="aclassFrameStack_html_a7da31bde9fe2f7cf6a4e2497445223a5"><div class="ttname"><a href="classFrameStack.html#a7da31bde9fe2f7cf6a4e2497445223a5">FrameStack::pop</a></div><div class="ttdeci">void pop()</div><div class="ttdoc">Pop the top frame of the stack.</div><div class="ttdef"><b>Definition:</b> frame_stack.cpp:16</div></div>
+<div class="ttc" id="aclassFrame_html"><div class="ttname"><a href="classFrame.html">Frame</a></div><div class="ttdef"><b>Definition:</b> frame.hpp:16</div></div>
+<div class="ttc" id="aclassFrameStack_html_a0e89e1f0c4d8cf007e2095847b2430e2"><div class="ttname"><a href="classFrameStack.html#a0e89e1f0c4d8cf007e2095847b2430e2">FrameStack::isEmpty</a></div><div class="ttdeci">bool isEmpty()</div><div class="ttdoc">Verify if the frame stack is empty.</div><div class="ttdef"><b>Definition:</b> frame_stack.cpp:21</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

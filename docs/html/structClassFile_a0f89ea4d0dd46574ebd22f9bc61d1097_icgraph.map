@@ -1,0 +1,5 @@
+<map id="ClassFile::getCodeByMethod" name="ClassFile::getCodeByMethod">
+<area shape="rect" id="node1" title="Get code from a method." alt="" coords="528,13,736,39"/>
+<area shape="rect" id="node2" href="$structClassFile.html#a4246a0f1cfb00c1c3efcb57032820d95" title="1) Fetch method in class_file;" alt="" coords="301,5,480,47"/>
+<area shape="rect" id="node3" href="$classRuntimeDataArea.html#a4cca2e6c1024f2266b9d7ee761d0bc36" title="Fetch instruction in code attribute of current frame&#39;s class file." alt="" coords="5,13,253,39"/>
+</map>
