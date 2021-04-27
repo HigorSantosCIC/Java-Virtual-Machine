@@ -530,6 +530,9 @@ void Interpreter::run()
         case (0xaa):
             tableswitch();
             break;
+        case (0xab):
+            lookupswitch();
+            break;
         case (0xac):
             ireturn();
             break;
@@ -1592,6 +1595,66 @@ void Interpreter::dastore()
     array_generic->data.array_value->data[index_generic->data.int_value] = value_generic;
 
     current_frame->setPcByOffset(1);
+}
+
+void Interpreter::lookupswitch()
+{
+    Frame *current_frame = runtime_data_area->frame_stack->getTop();
+
+    u1 padding_bytes = 4 - (current_frame->getPc() + 1) % 4;
+
+    if (padding_bytes == 4)
+        padding_bytes = 0;
+
+    u1 default_byte1 = runtime_data_area->fetchInstruction(padding_bytes + 1);
+    u1 default_byte2 = runtime_data_area->fetchInstruction(padding_bytes + 2);
+    u1 default_byte3 = runtime_data_area->fetchInstruction(padding_bytes + 3);
+    u1 default_byte4 = runtime_data_area->fetchInstruction(padding_bytes + 4);
+
+    u1 npairs1 = runtime_data_area->fetchInstruction(padding_bytes + 5);
+    u1 npairs2 = runtime_data_area->fetchInstruction(padding_bytes + 6);
+    u1 npairs3 = runtime_data_area->fetchInstruction(padding_bytes + 7);
+    u1 npairs4 = runtime_data_area->fetchInstruction(padding_bytes + 8);
+
+    int32_t default_bytes = (default_byte1 << 24) | (default_byte2 << 16) | (default_byte3 << 8) | default_byte4;
+    int32_t npairs = (npairs1 << 24) | (npairs2 << 16) | (npairs3 << 8) | npairs4;
+
+    GenericType *index_generic = current_frame->popValueFromOperandStack();
+    int32_t index = index_generic->data.int_value;
+
+    padding_bytes += 8;
+
+    bool flag_index_found = false;
+
+    for (int i = 0; i < npairs; i++)
+    {
+        u1 match_byte_1 = runtime_data_area->fetchInstruction(padding_bytes + 1);
+        u1 match_byte_2 = runtime_data_area->fetchInstruction(padding_bytes + 2);
+        u1 match_byte_3 = runtime_data_area->fetchInstruction(padding_bytes + 3);
+        u1 match_byte_4 = runtime_data_area->fetchInstruction(padding_bytes + 4);
+
+        int32_t match = (match_byte_1 << 24) | (match_byte_2 << 16) | (match_byte_3 << 8) | match_byte_4;
+
+        if (index == match)
+        {
+            flag_index_found = true;
+
+            u1 jump_byte_1 = runtime_data_area->fetchInstruction(padding_bytes + 5);
+            u1 jump_byte_2 = runtime_data_area->fetchInstruction(padding_bytes + 6);
+            u1 jump_byte_3 = runtime_data_area->fetchInstruction(padding_bytes + 7);
+            u1 jump_byte_4 = runtime_data_area->fetchInstruction(padding_bytes + 8);
+
+            int32_t jump_bytes = (jump_byte_1 << 24) | (jump_byte_2 << 16) | (jump_byte_3 << 8) | jump_byte_4;
+
+            current_frame->setPcByOffset(jump_bytes);
+
+            break;
+        }
+        padding_bytes += 8;
+    }
+
+    if (!flag_index_found)
+        current_frame->setPcByOffset(default_bytes);
 }
 
 void Interpreter::lastore()

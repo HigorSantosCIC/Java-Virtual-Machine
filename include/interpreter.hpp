@@ -1031,6 +1031,8 @@ private:
      */
     void dreturn();
 
+    void lookupswitch();
+
     /**
      * @brief (0xb0): Return reference value from method.
      */

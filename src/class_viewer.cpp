@@ -644,7 +644,7 @@ void ClassViewer::printInstructionParameters(u1 *code, int &index)
     std::cout << "#" << unsigned(cp_index) << " <" << class_file->getNameFromConstantPoolEntry(class_file->constant_pool[cp_index - 1]) << ">" << std::endl;
     index += 1;
   }
-  else if (code[index] == 0x13 or code[index] == 0x14 or (code[index] >= 0xb2 and code[index] <= 0xb8) or code[index] == 0xbb or code[index] == 0xbd or code[index] == 0xc0 or code[index] == 0xc1)
+  else if (code[index] == 0x13 or (code[index] >= 0xb2 and code[index] <= 0xb8) or code[index] == 0xbb or code[index] == 0xbd or code[index] == 0xc0 or code[index] == 0xc1)
   {
     u2 cp_index = ((code[index + 1] << 8) | code[index + 2]);
 
@@ -655,6 +655,16 @@ void ClassViewer::printInstructionParameters(u1 *code, int &index)
     std::string name_and_type = "<" + name + "." + type + ">";
 
     std::cout << "#" << cp_index << " " << name_and_type << std::endl;
+    index += 2;
+  }
+  else if (code[index] == 0x14)
+  {
+    u2 cp_index = ((code[index + 1] << 8) | code[index + 2]);
+
+    std::string value = class_file->getNameFromConstantPoolEntry(class_file->constant_pool[cp_index - 1]);
+
+    std::cout << "#" << cp_index << " "
+              << "<" << value << ">" << std::endl;
     index += 2;
   }
   else if (code[index] == 0x84)
@@ -807,15 +817,19 @@ void ClassViewer::printConstantPoolInfo(cp_info *constant_pool_entry)
     break;
   case CONSTANT_Integer:
     printConstantInteger(constant_pool_entry->info.integer_info);
+    std::cout << "\tInteger: " << class_file->getNameFromConstantPoolEntry(constant_pool_entry) << std::endl;
     break;
   case CONSTANT_Float:
     printConstantFloat(constant_pool_entry->info.float_info);
+    std::cout << "\tFloat: " << class_file->getNameFromConstantPoolEntry(constant_pool_entry) << std::endl;
     break;
   case CONSTANT_Long:
     printConstantLong(constant_pool_entry->info.long_info);
+    std::cout << "\tLong: " << class_file->getNameFromConstantPoolEntry(constant_pool_entry) << std::endl;
     break;
   case CONSTANT_Double:
     printConstantDouble(constant_pool_entry->info.double_info);
+    std::cout << "\tDouble: " << class_file->getNameFromConstantPoolEntry(constant_pool_entry) << std::endl;
     break;
   case CONSTANT_NameAndType:
     printConstantNameAndType(constant_pool_entry);
