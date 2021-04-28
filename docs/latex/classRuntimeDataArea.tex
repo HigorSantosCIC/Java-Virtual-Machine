@@ -1,0 +1,89 @@
+\hypertarget{classRuntimeDataArea}{}\doxysection{Runtime\+Data\+Area Class Reference}
+\label{classRuntimeDataArea}\index{RuntimeDataArea@{RuntimeDataArea}}
+
+
+Collaboration diagram for Runtime\+Data\+Area\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=309pt]{classRuntimeDataArea__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classRuntimeDataArea_a7bbe1a5c6db8ab3bb80bfcf224b94349}\label{classRuntimeDataArea_a7bbe1a5c6db8ab3bb80bfcf224b94349}} 
+void {\bfseries initialize\+Frame\+Stack} ()
+\item 
+u1 \mbox{\hyperlink{classRuntimeDataArea_a4cca2e6c1024f2266b9d7ee761d0bc36}{fetch\+Instruction}} (u2 pc\+\_\+offset)
+\begin{DoxyCompactList}\small\item\em Fetch instruction in code attribute of current frame\textquotesingle{}s class file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classRuntimeDataArea_ad4236e14ba46a5b55a5bd595ee374302}\label{classRuntimeDataArea_ad4236e14ba46a5b55a5bd595ee374302}} 
+std\+::string {\bfseries get\+Name\+From\+Constant\+Pool\+Entry} (\mbox{\hyperlink{structcp__info}{cp\+\_\+info}} $\ast$constant\+\_\+pool\+\_\+entry)
+\item 
+\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$ \mbox{\hyperlink{classRuntimeDataArea_a30b4fcd8ca2cf1af8ec77fa2a9970577}{load\+Class\+By\+Name}} (std\+::string class\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Load class file and add it to method area. If class file has init method, add it to frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classRuntimeDataArea_af75c0f432e9a20c0fe289aa048dc57f4}\label{classRuntimeDataArea_af75c0f432e9a20c0fe289aa048dc57f4}} 
+\mbox{\hyperlink{classFrameStack}{Frame\+Stack}} $\ast$ {\bfseries frame\+\_\+stack}
+\item 
+\mbox{\Hypertarget{classRuntimeDataArea_a40cf69de4db25e12862cf5a57e32eb66}\label{classRuntimeDataArea_a40cf69de4db25e12862cf5a57e32eb66}} 
+\mbox{\hyperlink{classMethodArea}{Method\+Area}} $\ast$ {\bfseries method\+\_\+area}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classRuntimeDataArea_a4cca2e6c1024f2266b9d7ee761d0bc36}\label{classRuntimeDataArea_a4cca2e6c1024f2266b9d7ee761d0bc36}} 
+\index{RuntimeDataArea@{RuntimeDataArea}!fetchInstruction@{fetchInstruction}}
+\index{fetchInstruction@{fetchInstruction}!RuntimeDataArea@{RuntimeDataArea}}
+\doxysubsubsection{\texorpdfstring{fetchInstruction()}{fetchInstruction()}}
+{\footnotesize\ttfamily u1 Runtime\+Data\+Area\+::fetch\+Instruction (\begin{DoxyParamCaption}\item[{u2}]{pc\+\_\+offset }\end{DoxyParamCaption})}
+
+
+
+Fetch instruction in code attribute of current frame\textquotesingle{}s class file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pc\+\_\+offset} & Offset from current PC value to be searched. Commonly, instructions with two code params have pc\+\_\+offset of 1 and 2, respectively. \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classRuntimeDataArea_a4cca2e6c1024f2266b9d7ee761d0bc36_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classRuntimeDataArea_a30b4fcd8ca2cf1af8ec77fa2a9970577}\label{classRuntimeDataArea_a30b4fcd8ca2cf1af8ec77fa2a9970577}} 
+\index{RuntimeDataArea@{RuntimeDataArea}!loadClassByName@{loadClassByName}}
+\index{loadClassByName@{loadClassByName}!RuntimeDataArea@{RuntimeDataArea}}
+\doxysubsubsection{\texorpdfstring{loadClassByName()}{loadClassByName()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$ Runtime\+Data\+Area\+::load\+Class\+By\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{class\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Load class file and add it to method area. If class file has init method, add it to frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em class\+\_\+name} & Name of the class to be loaded. Also acts as key in classes map. \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classRuntimeDataArea_a30b4fcd8ca2cf1af8ec77fa2a9970577_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/runtime\+\_\+data\+\_\+area.\+hpp\item 
+src/runtime\+\_\+data\+\_\+area.\+cpp\end{DoxyCompactItemize}

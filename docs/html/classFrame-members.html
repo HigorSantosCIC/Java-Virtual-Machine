@@ -68,7 +68,19 @@ $(function() {
 
 <p>This is the complete list of members for <a class="el" href="classFrame.html">Frame</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classFrame.html#a399b84417837574806ba94e60bb0021a">Frame</a>(cp_info **constant_pool)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classFrame.html#a0b483509aa33b222eb0084c8db3d8a57">Frame</a>(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classFrame.html#ae41e256c96433056964c932d3c5e7d67">Frame</a>(ClassFile *class_file, std::string p_method_name, std::string p_method_descriptor, std::vector&lt; GenericType * &gt; arguments)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getClassName</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>getConstantPool</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getLocalVariable</b>(int index) (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>getMethodDescriptor</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getMethodName</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>getPc</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getTopOperand</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>popValueFromOperandStack</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>pushValueIntoOperandStack</b>(GenericType *value) (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>setLocalVariable</b>(GenericType *value, int index) (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setPcByOffset</b>(int offset) (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>~Frame</b>() (defined in <a class="el" href="classFrame.html">Frame</a>)</td><td class="entry"><a class="el" href="classFrame.html">Frame</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->

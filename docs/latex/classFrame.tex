@@ -4,22 +4,67 @@
 
 {\ttfamily \#include $<$frame.\+hpp$>$}
 
+
+
+Collaboration diagram for Frame\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=253pt]{classFrame__coll__graph}
+\end{center}
+\end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classFrame_a399b84417837574806ba94e60bb0021a}{Frame}} (\mbox{\hyperlink{structcp__info}{cp\+\_\+info}} $\ast$$\ast$constant\+\_\+pool)
-\begin{DoxyCompactList}\small\item\em Creates a frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\mbox{\hyperlink{classFrame_a0b483509aa33b222eb0084c8db3d8a57}{Frame}} (\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$class\+\_\+file, std\+::string p\+\_\+method\+\_\+name, std\+::string p\+\_\+method\+\_\+descriptor)
+\begin{DoxyCompactList}\small\item\em Creates a frame. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classFrame_ae41e256c96433056964c932d3c5e7d67}{Frame}} (\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$class\+\_\+file, std\+::string p\+\_\+method\+\_\+name, std\+::string p\+\_\+method\+\_\+descriptor, std\+::vector$<$ \mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$ $>$ arguments)
+\begin{DoxyCompactList}\small\item\em Creates a frame. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classFrame_a74d798c938f9c40646662ab626921d9c}\label{classFrame_a74d798c938f9c40646662ab626921d9c}} 
+void {\bfseries push\+Value\+Into\+Operand\+Stack} (\mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$value)
+\item 
+\mbox{\Hypertarget{classFrame_abd1bcbf007a46318d2ee8e1c81967fa0}\label{classFrame_abd1bcbf007a46318d2ee8e1c81967fa0}} 
+\mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$ {\bfseries pop\+Value\+From\+Operand\+Stack} ()
+\item 
+\mbox{\Hypertarget{classFrame_aef5f1099b7779977a178bc67ee4ec219}\label{classFrame_aef5f1099b7779977a178bc67ee4ec219}} 
+u4 {\bfseries get\+Pc} ()
+\item 
+\mbox{\Hypertarget{classFrame_abc2071c9fb2171d463fb586fb9cbab1a}\label{classFrame_abc2071c9fb2171d463fb586fb9cbab1a}} 
+std\+::string {\bfseries get\+Class\+Name} ()
+\item 
+\mbox{\Hypertarget{classFrame_a240eb0db76c4da572ab9bbc45c1f1a59}\label{classFrame_a240eb0db76c4da572ab9bbc45c1f1a59}} 
+std\+::string {\bfseries get\+Method\+Name} ()
+\item 
+\mbox{\Hypertarget{classFrame_a0eff488b6116df6ae06e42ed17c43d0a}\label{classFrame_a0eff488b6116df6ae06e42ed17c43d0a}} 
+std\+::string {\bfseries get\+Method\+Descriptor} ()
+\item 
+\mbox{\Hypertarget{classFrame_ac28ffcb47e305906f3c2e18f7f765715}\label{classFrame_ac28ffcb47e305906f3c2e18f7f765715}} 
+\mbox{\hyperlink{structcp__info}{cp\+\_\+info}} $\ast$$\ast$ {\bfseries get\+Constant\+Pool} ()
+\item 
+\mbox{\Hypertarget{classFrame_a3ba930430e0cd11e7069355ba3788f5e}\label{classFrame_a3ba930430e0cd11e7069355ba3788f5e}} 
+\mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$ {\bfseries get\+Top\+Operand} ()
+\item 
+\mbox{\Hypertarget{classFrame_ac558fa96deb40e1e45c0f0e1015d992d}\label{classFrame_ac558fa96deb40e1e45c0f0e1015d992d}} 
+\mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$ {\bfseries get\+Local\+Variable} (int index)
+\item 
+\mbox{\Hypertarget{classFrame_a55ba193fcdc92cc56e26cdda8f2c6c85}\label{classFrame_a55ba193fcdc92cc56e26cdda8f2c6c85}} 
+void {\bfseries set\+Pc\+By\+Offset} (int offset)
+\item 
+\mbox{\Hypertarget{classFrame_afb0786a6f1a01632a47001093076557c}\label{classFrame_afb0786a6f1a01632a47001093076557c}} 
+void {\bfseries set\+Local\+Variable} (\mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$value, int index)
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-A frame is a data structure that contains information about the current method executed by the interpreter. All frames are stack in a \mbox{\hyperlink{classFrameStack}{Frame\+Stack}}. 
+A frame is a data structure that contains information about the methods executed by the interpreter. All frames are stack in a \mbox{\hyperlink{classFrameStack}{Frame\+Stack}}. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classFrame_a399b84417837574806ba94e60bb0021a}\label{classFrame_a399b84417837574806ba94e60bb0021a}} 
+\mbox{\Hypertarget{classFrame_a0b483509aa33b222eb0084c8db3d8a57}\label{classFrame_a0b483509aa33b222eb0084c8db3d8a57}} 
 \index{Frame@{Frame}!Frame@{Frame}}
 \index{Frame@{Frame}!Frame@{Frame}}
-\doxysubsubsection{\texorpdfstring{Frame()}{Frame()}}
-{\footnotesize\ttfamily Frame\+::\+Frame (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcp__info}{cp\+\_\+info}} $\ast$$\ast$}]{constant\+\_\+pool }\end{DoxyParamCaption})}
+\doxysubsubsection{\texorpdfstring{Frame()}{Frame()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Frame\+::\+Frame (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$}]{class\+\_\+file,  }\item[{std\+::string}]{p\+\_\+method\+\_\+name,  }\item[{std\+::string}]{p\+\_\+method\+\_\+descriptor }\end{DoxyParamCaption})}
 
 
 
@@ -27,11 +72,37 @@ Creates a frame.
 
 
 \begin{DoxyParams}{Parameters}
-{\em constant\+\_\+pool} & reference to the constant pool of the frame method\textquotesingle{}s class. \\
+{\em class\+\_\+file} & \mbox{\hyperlink{structClassFile}{Class\+File}} containing loaded class file data \\
+\hline
+{\em p\+\_\+method\+\_\+name} & Method name, used as key to loaded \mbox{\hyperlink{structClassFile}{Class\+File}} in \mbox{\hyperlink{classMethodArea}{Method\+Area}}. \\
+\hline
+{\em p\+\_\+method\+\_\+descriptor} & Method descriptor to represent return and argument types. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classFrame_ae41e256c96433056964c932d3c5e7d67}\label{classFrame_ae41e256c96433056964c932d3c5e7d67}} 
+\index{Frame@{Frame}!Frame@{Frame}}
+\index{Frame@{Frame}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{Frame()}{Frame()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Frame\+::\+Frame (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structClassFile}{Class\+File}} $\ast$}]{class\+\_\+file,  }\item[{std\+::string}]{p\+\_\+method\+\_\+name,  }\item[{std\+::string}]{p\+\_\+method\+\_\+descriptor,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structGenericType}{Generic\+Type}} $\ast$ $>$}]{arguments }\end{DoxyParamCaption})}
+
+
+
+Creates a frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em class\+\_\+file} & \mbox{\hyperlink{structClassFile}{Class\+File}} containing loaded class file data \\
+\hline
+{\em p\+\_\+method\+\_\+name} & Method name, used as key to loaded \mbox{\hyperlink{structClassFile}{Class\+File}} in \mbox{\hyperlink{classMethodArea}{Method\+Area}}. \\
+\hline
+{\em p\+\_\+method\+\_\+descriptor} & Method descriptor to represent return and argument types. \\
+\hline
+{\em arguments} & arguments to be inserted in local variable array. \\
 \hline
 \end{DoxyParams}
 
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/frame.\+hpp\end{DoxyCompactItemize}
+include/frame.\+hpp\item 
+src/frame.\+cpp\end{DoxyCompactItemize}

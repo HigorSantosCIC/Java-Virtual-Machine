@@ -1,0 +1,4 @@
+<map id="MethodArea::addClass" name="MethodArea::addClass">
+<area shape="rect" id="node1" title="Add loaded class file into method area." alt="" coords="263,13,431,39"/>
+<area shape="rect" id="node2" href="$classRuntimeDataArea.html#a30b4fcd8ca2cf1af8ec77fa2a9970577" title="Load class file and add it to method area. If class file has init method, add it to frame." alt="" coords="5,5,215,47"/>
+</map>

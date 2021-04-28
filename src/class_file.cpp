@@ -33,6 +33,19 @@ method_info *ClassFile::searchMethodByNameAndDescriptor(std::string method_name,
     return NULL;
 }
 
+bool ClassFile::fieldExists(std::string field_name)
+{
+    for (int i = 0; i < fields_count; i++)
+    {
+        std::string current_field_name = getNameFromConstantPoolEntry(constant_pool[fields[i]->name_index - 1]);
+
+        if (field_name == current_field_name)
+            return true;
+    }
+
+    return false;
+}
+
 std::string ClassFile::getNameFromConstantPoolEntry(cp_info *constant_pool_entry)
 {
     std::string s = "";
@@ -106,14 +119,43 @@ std::string ClassFile::getNameFromConstantPoolEntry(cp_info *constant_pool_entry
 
         return s;
     case CONSTANT_Double:
-        //TODO
+    {
+        u4 high_bytes = constant_pool_entry->info.double_info->high_bytes;
+        u4 low_bytes = constant_pool_entry->info.double_info->low_bytes;
 
-        return "TODO";
+        uint64_t long_value = ((uint64_t)high_bytes << 32) + (uint64_t)low_bytes;
+
+        double double_value = *(double *)&long_value;
+
+        s = std::to_string(double_value);
+
+        return s;
+    }
+    case CONSTANT_Long:
+    {
+        u4 high_bytes = constant_pool_entry->info.long_info->high_bytes;
+        u4 low_bytes = constant_pool_entry->info.long_info->low_bytes;
+
+        int64_t long_value = ((int64_t)high_bytes << 32) + (int64_t)low_bytes;
+
+        s = std::to_string(long_value);
+
+        return s;
+    }
+    case CONSTANT_Float:
+        s = std::to_string(*(float *)&constant_pool_entry->info.float_info->bytes);
+
+        return s;
+    case CONSTANT_Integer:
+        s = std::to_string((int32_t)constant_pool_entry->info.integer_info->bytes);
+
+        return s;
     default:
         std::cout << "Tag <" << constant_pool_entry->tag << "> not found." << std::endl;
-
-        return "";
+        break;
     }
+
+    return "";
 }
 
 u1 *ClassFile::getCodeByMethod(method_info *method)
